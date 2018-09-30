@@ -1,0 +1,179 @@
+
+---
+# Must contain variables['network'], all variables go under the dict 'variables'
+name:
+  test_network
+variables:
+# neuron parameters
+- &exc_input_neuron 
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] , 
+    'threshold' : [0.4 , 0.55 ] , 
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5], 
+    'ctype' : 'exc_input_neuron'
+    }
+   
+- &exc_simple_neuron  
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'exc_simple_neuron'
+    }
+    
+- &exc_medial_neuron  
+    {
+    'type' : 0 , 
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'exc_simple_neuron'
+    }
+    
+- &exc_complex_neuron  
+     {
+     'type' : 0 , 
+     'tpsp' : 0,
+     'output' : False,
+     'membrane_potential' : 0 ,
+     'receptive_field' : 0.1 ,
+     'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+     'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+     'std_time_constant' : [1e-3,2e-3] , 
+     'stdp_A_minus' : [50e-3,80e-3] ,
+     'stdp_A_plus' : [1,1] , 
+     'stdp_T_minus'  : [50e-3,80e-3] ,
+     'stdp_T_plus' : [20e-3,40e-3] ,
+     'utilization_factor' : [0.2,0.3] ,
+     'threshold' : [0.4 , 0.55 ] ,
+     'p_constant' : [ 1.3,1.5] , 
+     'input_scaling_factor' : [4,5] ,
+     'ctype' : 'exc_simple_neuron'
+    }
+
+- &inh_inter_neuron  
+    {
+    'type' : 0 , 
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'exc_simple_neuron'
+    }
+    
+
+# synapse_parameters
+
+- &stdp_synapse
+  {'initial_weight' : [ 0 , 1]}
+
+
+# receptive fields
+
+-  &L0F 0.2
+-  &L1F 0.35
+-  &L2F 0.4
+-  &L3F 0.9
+
+
+# layers
+
+- &layer0
+  - [[*exc_input_neuron ,[[]]]]
+
+- &layer1
+    - [[*exc_simple_neuron,[[-1,*L1F,*stdp_synapse]]],[*exc_complex_neuron,[[-1,*L1F,*stdp_synapse]]],[*exc_medial_neuron,[[-1,*L1F,*stdp_synapse]]]] 
+    - [[*exc_simple_neuron,[[-1,*L1F,*stdp_synapse]]],[*inh_inter_neuron,  [[0,0.5,*stdp_synapse]  ]],[*exc_simple_neuron,[[-1,*L1F,*stdp_synapse]]]] 
+    - [[*exc_simple_neuron,[[-1,*L1F,*stdp_synapse]]],[*exc_simple_neuron,[[-1,*L1F,*stdp_synapse]] ],[*exc_simple_neuron,[[-1,*L1F,*stdp_synapse]]]]
+
+- &layer2
+  - [[*exc_medial_neuron,[[-1,*L1F,*stdp_synapse]]],[*exc_complex_neuron,[[-1,*L1F,*stdp_synapse]]]]
+
+- &layer3
+  - [[*exc_complex_neuron,[[-3,*L3F,*stdp_synapse],[-2,*L2F,*stdp_synapse],[-1,0.5,*stdp_synapse]]]]
+
+
+# groups
+
+- &group1
+  - *layer0
+
+- &group2
+  - *layer1
+  - *layer2
+  - *layer3
+
+- &group3
+  - - [[*exc_complex_neuron,[[-1,0.5,*stdp_synapse]]]]
+
+
+# ensembles 
+ensemble1 : 
+  - [*group1,[50,50]]
+  - [*group2,[3,3]]
+    
+ensemble2 : 
+  - [*group1,[2,2]]
+  - [*group2,[4,4]]    
+
+ensemble3 : 
+  - [*group3,[3,3]]
+
+# The network object
+ 
+network:
+  root:
+    - [ ensemble1 , { 'connect_method' : default , 'delay' : 30 , 'neuromodulation_factor_init' : 1 } ] 
+    - [ ensemble2 , { 'connect_method' : default , 'delay' : 20 , 'neuromodulation_factor_init' : 1} ]
+  ensemble1:
+    - [ ensemble3 , { 'connect_method' : default , 'delay' : 50  , 'neuromodulation_factor_init' : 1} ]
+...
