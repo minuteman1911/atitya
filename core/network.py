@@ -1,5 +1,3 @@
-# The Network object is topmost in the hierarchy of the computation which happens in Kobe
-
 import copy
 import pdb
 import json
@@ -49,11 +47,6 @@ class Network(object):
 		self.actuators.append(actuator)
 	
 	def loadNetwork(self):
-		"""
-			This name is a misnomer - This function only pulls the network information from redis-server,
-			and builds the Ensemble objects from it. In reality, the whole network is loaded by redis,
-			on the machine where it resides.
-		"""
 		self.logger.info('In loadNetwork, getting saved network configuration')
 		string = self.rconn.hget(self.network_name,'network_graph')
 		self.network_graph = json.loads(string)
@@ -78,19 +71,10 @@ class Network(object):
 		self.execution_order = self._topological_sort(self.network_graph)
 	
 	def deleteNetwork(self,name):
-		"""
-			The name is pretty much self-explanatory
-		"""
 		for key in self.rconn.scan_iter(name+":*"):
     			self.rconn.delete(key)
 	
 	def dumpAsString(self,file):
-		"""
-			Dumps the whole network including the weights and the config as a string on a file.
-			This is a heavy operation and could take a long time in case of very large networks.
-			Primarily of this is debug and backup, the network is also saved by Redis itself,
-			where redis-server resides. 
-		"""
 		fp = open(file,'w')
 		def pprint(*args):
 			fp.write(''.join(args)+'\n')
@@ -174,23 +158,10 @@ class Network(object):
 	
 		return fas
 	
-	def deleteNodes(self,node_id_list):
-		"""
-			Deletes the nodes as given in node_id_list, which is a list of strings, where all strings are node_ids
-		"""
-		self.rconn.hdel(self.network_id+'_nodes',node_id_list)
+	def deleteNodes(self,nodes):
+		self.rconn.hdel(self.network_id+'_nodes',nodes)
 	
 	def pruning_fn(self,i,algorithm='remove_least_activated'):
-		"""
-			This is the pruning function.
-			Pruning has two subtypes:
-				1. Weight pruning
-				2. Node pruning
-			This function is responsible for Node pruning. Weight pruning occurs at Node level, i.e. in the KRE
-			The only algorithm currently supported for Node pruning is to remove the least activated nodes first. 
-			The parameter 'i' (current iteration) is extra, and not used by this algorithm;
-			passed in case if any other algorithm wants to make use of it.  
-		"""
 		list = []
 		if algorithm == 'remove_least_activated':
 			for layer in ensemble:
@@ -204,20 +175,15 @@ class Network(object):
 		return list
 		
 	def prune_nodes(self , i ):
-		list = self.pruning_fn( i , self.pruning_params['algorithm'])
+		list = self.pruning_fn( i , self.pruning_params['algorithm']):
 		if list != []:
 			deleteNodes(list)
 			
-	def getOutputs(self,output_node_id_list,params=None):
-		"""
-			Gets the current variable value of all the nodes specified in output_node_id_list,
-			which is a list of strings, where all strings are node_ids.
-			params field is an optional list of strings, used to get only those outputs as are specified in params 
-		"""
+	def getOutputs(self,output_nodes,params=None):
 		result = None
-		self.logger.debug('Getting outputs for :%s',str(output_node_id_list))
+		self.logger.debug('Getting outputs for :%s',str(output_nodes))
 		pipe = self.rconn.pipeline()
-		for row in output_node_id_list:
+		for row in output_nodes:
 			pipe.hmget(self.network_id + '_nodes',row)
 		
 		result1 = pipe.execute()
@@ -233,10 +199,6 @@ class Network(object):
 	
 		
 	def setNodeInputs(self,data,*args):
-		"""
-			Sets the inputs from the input buffers (sensors) to an input layer of the network.
-			
-		"""
 		nodes = args[0]
 		params = args[1]
 		self.logger.debug('Setting inputs:%s',str(data))
@@ -244,13 +206,12 @@ class Network(object):
 		for row in nodes:
 			pipe.hmget(self.network_id + '_nodes',row)
 		result = pipe.execute()
-		pdb.set_trace()
+		
 		mapping = {}
 		for row1,row2,row3 in zip(nodes,result,data):
 			for node,nodestring,value in zip(row1,row2,row3):
 				nodedict = json.loads(nodestring)
-				# Below line passes the value as native python type, instead of numpy dtype
-				item_setter(nodedict,value.item(),*params)
+				item_setter(nodedict,value,*params)
 				mapping[node] = json.dumps(nodedict)
 				
 		self.rconn.hmset(self.network_id + '_nodes',mapping)
@@ -264,16 +225,10 @@ class Network(object):
 		pass
 		
 	def simulate(self ):
-		"""
-			This function advances the network by one complete cycle. It applies any inputs in the input buffers,
-			runs them through the network in KRE, and finally applies them to te output buffers. 
-		"""
 		outputs = {}
 		t = self.simulation_time
 		ept1 = time.time()
-		pdb.set_trace()	
 		self.logger.info('Polling inputs from sensors')
-			
 		for s in self.sensors:
 			s.setInputs()
 		self.logger.info('Starting execution, simulation time : %s , current time : %s',str(t), str(ept1))

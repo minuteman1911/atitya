@@ -42,13 +42,6 @@ def render_hinton(axis,**kwargs):
 def render_heatmap(axis,**kwargs):
     return None
 
-def render_image(axis,**kwargs):
-	axis.imshow(kwargs['new_data'])
-
-def image_plot():
-	plt = Plt(func_update=render_image)
-	return plt
-
 def hinton():
 	plt = Plt(func_update=render_hinton)
 	return plt

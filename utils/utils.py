@@ -5,10 +5,8 @@ import logging
 import redis
 import pickle
 import random
-import requests
 import json
 import time
-import os
 import numpy as np
 import pdb
 GLOBAL_CACHE_SIZE = 2048
@@ -168,11 +166,3 @@ class Job():
 	
 	def __str__(self):
 		return "<job_id:"+self.job_id+", process_list:"+str(self.process_list)+", params : "+str(self.params)+">"
-		
-def downloadFileFromUrl(url , target_folder):
-	print("Downloading from " + url )
-	if not os.path.exists(target_folder):
-		os.mkdir(target_folder)
-	r = requests.get(url)
-	with open(os.path.join ( target_folder , os.path.basename(url) ) ,'wb') as f:
-		f.write(r.content)	

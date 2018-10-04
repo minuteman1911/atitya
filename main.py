@@ -1,23 +1,20 @@
 from kobe import *
+from third_party import *
+import kobe.utils as utils
 import kobe.rendering as plt
 import gzip, pickle
 import numpy as np
 import sys,os
 from io import StringIO
 import logging
+import requests
 import pdb
-#from kobe_rendering import *
+from mnist import MNIST
 
-def getImgData(file):
-	char2img_map = {}
-	with gzip.open(file,'rb') as ff :
-			u = pickle._Unpickler( ff )
-			u.encoding = 'latin1'
-			train, val, test = u.load()
-	for data,label in zip(train[0],train[1]):
-		if label not in char2img_map:
-			char2img_map[str(label)] = []
-		char2img_map[str(label)].append(data.reshape(28,28))
+def getImgData(images,labels):
+	char2img_map = { str(l) : [] for l in set(labels)}
+	for data,label in zip(images,labels):
+		char2img_map[str(label)].append(np.reshape(np.array(data),(28,28)))
 			
 	char2img_map[' ']=[np.zeros(shape=(28,28),dtype=np.uint8)]
 	return char2img_map
@@ -98,13 +95,24 @@ def getContext(display):
 	context = config.create_context(None)
 	return context
 
-if __name__ == "__main__":
 
-
-	logger = InitLogger('kobe_test'+'.log')
-	char2img_map = getImgData('mnist.pkl.gz')
-	install_dir = os.path.dirname(os.path.realpath(__file__))
 	
+if __name__ == "__main__":
+	install_dir = os.path.dirname(os.path.realpath(__file__))
+	logger = InitLogger('kobe_test'+'.log')
+	mnist_url = "http://yann.lecun.com/exdb/mnist/"
+	mnist_dir = os.path.join(install_dir , 'mnist_data')
+	if not os.path.exists(mnist_dir):
+		utils.downloadFileFromUrl(mnist_url+'train-images-idx3-ubyte.gz',target_folder=mnist_dir)
+		utils.downloadFileFromUrl(mnist_url+'train-labels-idx1-ubyte.gz',target_folder=mnist_dir)
+		utils.downloadFileFromUrl(mnist_url+'t10k-images-idx3-ubyte.gz',target_folder=mnist_dir)
+		utils.downloadFileFromUrl(mnist_url+'t10k-labels-idx1-ubyte.gz',target_folder=mnist_dir)
+	#pdb.set_trace()
+	mndata = MNIST(mnist_dir)
+	mndata.gz = True
+	images, labels = mndata.load_training()
+	char2img_map = getImgData(images , labels)
+
 	topology = Topology('network.yaml','redis://localhost:6379')	
 	print (topology.addr)
 	if topology.initialized == True:
@@ -112,7 +120,8 @@ if __name__ == "__main__":
 	else:
 		logger.info('Error : Network not initialized, exiting')
 		sys.exit()
-	env = SimpleArithmeticEnv(i_resolution=(50,50),slate_resolution=(200,200),char2img_map=char2img_map,operator='2',threshold_probability=0.9)		 
+	
+	env = SimpleArithmeticEnv(i_resolution=(50,50),slate_resolution=(200,200),char2img_map=char2img_map,mn_object=mndata,operator='2',threshold_probability=0.9)		 
 
 	
 	eye_sensor = Sensor(network.setNodeInputs,target_params=(network.getEnsemble('ensemble1').getLayer(0),('params','membrane_potential',)))
@@ -194,11 +203,17 @@ if __name__ == "__main__":
 		
 		probe2.log('ensemble1.layer1',network.getOutputs(network.getEnsemble('ensemble1').getLayer(1)),t)
 		probe2.log('ensemble2.layer2',network.getOutputs(network.getEnsemble('ensemble2').getLayer(2)),t)
-		probe2.log('ensemble1.layer3',network.getOutputs(network.getEnsemble('ensemble3').getLayer(0)),t)
+		probe2.log('ensemble1.layer0',network.getOutputs(network.getEnsemble('ensemble3').getLayer(0)),t)
 
 		print (action)
 		#pdb.set_trace()
+
+
 		graph.update(x=t,y=raw_outputs[0][0][0]['params']['membrane_potential'])
+
+
+		
+
 		#renderer.updateGraph('graph1','V',t,raw_outputs[0][0][0]['params']['membrane_potential'])
 		#renderer.updateGraph('graph2','u',t,raw_outputs[0][0][0]['params']['utilization_factor'])
 		#renderer.render()
