@@ -1,0 +1,226 @@
+
+---
+# Must contain variables['network'], all variables go under the dict 'variables'
+name:
+  test_network
+variables:
+# neuron parameters
+- &exc_input_neuron 
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] , 
+    'threshold' : [0.4 , 0.55 ] , 
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5], 
+    'ctype' : 'exc_input_neuron'
+    }
+   
+- &exc_simple_neuron  
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'exc_simple_neuron'
+    }
+    
+- &exc_medial_neuron  
+    {
+    'type' : 0 , 
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'exc_simple_neuron'
+    }
+    
+- &exc_complex_neuron  
+     {
+     'type' : 0 , 
+     'tpsp' : 0,
+     'output' : False,
+     'membrane_potential' : 0 ,
+     'receptive_field' : 0.1 ,
+     'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+     'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+     'std_time_constant' : [1e-3,2e-3] , 
+     'stdp_A_minus' : [50e-3,80e-3] ,
+     'stdp_A_plus' : [1,1] , 
+     'stdp_T_minus'  : [50e-3,80e-3] ,
+     'stdp_T_plus' : [20e-3,40e-3] ,
+     'utilization_factor' : [0.2,0.3] ,
+     'threshold' : [0.4 , 0.55 ] ,
+     'p_constant' : [ 1.3,1.5] , 
+     'input_scaling_factor' : [4,5] ,
+     'ctype' : 'exc_simple_neuron'
+    }
+
+- &inh_inter_neuron  
+    {
+    'type' : 0 , 
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'exc_simple_neuron'
+    }
+    
+
+# synapse_parameters
+
+- &stdp_synapse
+  {'initial_weight' : [ 0 , 1]}
+
+
+# receptive fields
+
+-  &L0F 0.2
+-  &L1F 0.35
+-  &L2F 0.4
+-  &L3F 0.9
+
+
+# layers
+
+
+- &retinal_nuclear_layer
+  - [[*exc_input_neuron ,[[]]]]
+
+- &retinal_ganglion_layer
+
+- &thalamic_reticular_layer
+
+- &thalamic_matrix_type_layer
+
+- &thalamic_core_type_layer
+
+
+- &cortical_layer2
+
+- &cortical_layer3
+
+- &cortical_layer4
+
+- &cortical_layer5
+
+- &cortical_layer6
+
+
+# groups
+
+- &retinal_column
+  - *retinal_nuclear_layer
+  - *retinal_ganglion_layer
+
+- &lateral_geniculate_nucleus
+  - *thalamic_reticular_layer
+  - *thalamic_matrix_type_layer
+  - *thalamic_core_type_layer
+
+- &medial_geniculate_nucleus
+  - *thalamic_reticular_layer
+  - *thalamic_matrix_type_layer
+  - *thalamic_core_type_layer
+
+- &cortical_column
+  - *cortical_layer2
+  - *cortical_layer3
+  - *cortical_layer4
+  - *cortical_layer5
+  - *cortical_layer6
+
+
+# ensembles
+retinal_input:
+  - [*retinal_column,[1,1]]
+
+#reward_input:
+
+motor_input:
+
+thalamus:
+  - [*lateral_geniculate_nucleus,[1,1]]
+  - [*ventral_lateral_nucleus,[1,1]]
+
+
+striatum:
+
+internal_globus_pallidus:
+
+external_globus_pallidus:
+
+subthalamic_nucleus:
+
+
+
+cortex:
+  - [*cortical_column,[5,5]]
+
+
+# The network object
+ 
+network:
+  root:
+    - [ retinal_input , { 'connect_method' : default , 'delay' : 1 , 'neuromodulation_factor_init' : 1 } ]
+    - [ reward_input , { 'connect_method' : default , 'delay' : 1 , 'neuromodulation_factor_init' : 1 } ]
+    - [ motor_input , { 'connect_method' : default , 'delay' : 1 , 'neuromodulation_factor_init' : 1 } ]
+  retinal_input:
+    - [ thalamus , { 'connect_method' : default , 'delay' : 3  , 'neuromodulation_factor_init' : 1} ]
+  motor_input:
+    - [ thalamus , { 'connect_method' : default , 'delay' : 3  , 'neuromodulation_factor_init' : 1} ]
+  thalamus:
+    - [ cortex , { 'connect_method' : default , 'delay' : 5  , 'neuromodulation_factor_init' : 1} ]
+  cortex:
+    - [ striatum , { 'connect_method' : default , 'delay' : 5  , 'neuromodulation_factor_init' : 1} ]
+  striatum:
+    - [ internal_globus_pallidus , { 'connect_method' : default , 'delay' : 5  , 'neuromodulation_factor_init' : 1} ]
+    - [ external_globus_pallidus , { 'connect_method' : default , 'delay' : 5  , 'neuromodulation_factor_init' : 1} ]	
+  external_globus_pallidus:
+    - [ subthalamic_nucleus , { 'connect_method' : default , 'delay' : 5  , 'neuromodulation_factor_init' : 1} ]
+
+...
