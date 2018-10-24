@@ -20,6 +20,7 @@
      
      
 # Software Architecture
+    Kobe uses Redis internally to store each node of the entire graph as a json string. This makes the whole graph to be accessible from any device on the local area network. Each device has a separate worker running on it, which subscribes to a global queue
 
 # The Kobe runtime
 
