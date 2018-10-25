@@ -16,10 +16,10 @@
    3. Someone who wants to do NLP.
     
 # TL;DR 
-   I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to what problem Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). The problem though with ANNs of today is that they can solve only a specefic range of tasks and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
+   I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image procesding, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
    ### Is AI a bubble?
-   We don't know that yet; only time will tell. Most people today implement a technique called ML (Machine Learning) to make their applications smarter. ML has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing prowess increased manifold in the last two decades. AI is actually a broader term which may be vaguely summed up as an answer to the requirement : "Do anything but make my machine seem inteligent!". Thus, a very complex system of hardcoded rules, interdependent on each other could make up a good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest technique of making an AI system) and the biological brain. 
-    Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot, that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the plasticity rules in the artificial brain are different.
+   We don't know that yet; only time will tell. Most people today implement a technique called ML (Machine Learning) to make their applications smarter. Although ML has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing prowess increased manifold in the last two decades. AI is actually a broader term which may be vaguely summed up as a solution to the problem : "Do anything but make my machine seem inteligent!". Thus, a very complex system of hardcoded rules, interdependent on each other could make up a good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest technique of making an AI system) and the biological brain. 
+    Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot; that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the plasticity rules in the artificial brain are different.
     Can today's AI make a machine possible of exhibiting conscious thought? Unlikely.
    ### Difference between ANNs and biological NNs
   Perhaps the most important difference in ANNs and bioloical neural networks is that of time. ANNs pass information to each other based on the intensity of their output. On the contrary, biological neurons seem to communicate based on modulation of their firing rate. Not only timing, but also the inter-connectivity is different in biological neural networks. They are characterized by large recurrent feedback loops, and seem to be organized into distinct layers. I simply cannot mention and explain all the differences here, the list is extensive.      
@@ -40,9 +40,9 @@
   Name                           | Present in Kobe 
   ------------------------------ | -----------------
   Multiple neuron types          | Yes
-  Layer wise seperation of 
-  neuron groups                  | Yes
-  Large number of inter-layer and intra-layer connections        | Yes    
+  Layer wise seperation of neuron groups | Yes
+  Locally connected neurons | Yes
+  Large number of inter-layer and intra-layer connections | Yes    
   columnar organization          | Yes     
   multi-compartment neurons      | No
  
@@ -56,8 +56,8 @@
   consideration of propagation delays | Possible
   multiple neurotransmitters     | Possible
   stochastically firing neurons  | Possible
-  activation dependent on spine location on denrite            | No
-     
+  activation dependent on spine location on denrite | No
+  simulation of glial cells | No   
      
   #### Plasticity
   Name                           | Present in Kobe 
@@ -73,10 +73,10 @@
    
   All these phenomena can be simulated along with others. Eg : stdp and reward based learning can both be present on a particular synapse.
   
-  A simulation in Kobe is based primarily on a computational or functional aspect, rather than the biophysical aspect. Meaning, Kobe does not try to model an ideal neuron and an ideal biophysically plausible network of neurons. Infact, doing do may be counterproductive, inefficient and a waste of computing power. This is a very dangerous assumption that the whole philosophy of Kobe rests on; if proved wrong, if at any point in time, it is proved that an ideal simulation is necessary for generating a complete and an acceptable simulation of conscious behaviour, Kobe would be obsolete. Proving one would require disproving the other, another purpose for Kobe to exist. Ironically, Kobe could lead to its own peril.
+  A simulation in Kobe is based primarily on a computational or functional aspect, rather than the biophysical aspect. Meaning, Kobe does not try to model an ideal neuron and an ideal biophysically plausible network of neurons. Infact, doing do may be counterproductive, inefficient and a waste of computing power. This is a very dangerous assumption that the whole idea of Kobe rests on; if at any point in time, it is proved that an ideal simulation is necessary for generating a complete simulation of emergent behaviour, Kobe would be obsolete. Proving one would require disproving the other, another purpose for Kobe to exist. Ironically, Kobe could lead to its own peril.
         
 # Software Architecture
-  Kobe as the following top-level structural components:
+  Kobe has the following top-level structural components:
   ### 1. Database
    Kobe uses a caching database ( Redis ) internally to store each node of the entire graph as a json string. This makes the whole graph accessible from any device on the local area network. Thus Kobe is scalable horizontally with the number of cpu cores. Everything is stored on the DB.
   ### 2. Worker
@@ -88,18 +88,25 @@
   ### 1. Node
    A Node is nothing but the smallest unit which can be 'processed' by a worker. Basicaly it is the counterpart of a neuron. Only neurons can be nodes, unlike in some other projects where a probing device (which lets you measure the activity of a neuron) can also be a Node. A larger unit processed by a worker is a Job.
   ### 2. Ensemble
-   An ensemble is a large group of nodes which can be processed atomically. By definition, an Ensemble means an aggregation or a group of many things. It is equivalent to 'a collection of multiple cliques of neurons'. Multiple workers process an Ensemble. 
+   An ensemble is a large group of nodes which can be processed atomically. By definition, an 'ensemble' is an aggregation or a group of many things. Here, it is equivalent to 'a collection of multiple cliques of neurons'. Multiple workers process an Ensemble. 
   ### 3. Network
    It can be defined as the computation graph, the order to follow while evaluating the Ensembles. Kobe first converts any given directed graph into a Directed Acyclic Graph; it removes any cycles if present. Then, it evaluates each Ensemble according to the graph. 
     
-  The workers in Kobe are general purpose. They do not hold an awful lot of neurons in memory at any given time. Instead, they **load** the whole neuron, process it, and update its parameters if it fires. The operations in Kobe are atomic and computation progresses layer-by-layer. In effect, all the workers can work on only one layer at any point in time. In case of recurrent loops, there is a delay of one iteration for simulating the state after the feedback. 
+  The workers in Kobe are general purpose. They do not hold an awful lot of neurons in memory at any given time. Instead, they **load** the whole neuron, process it, and update its parameters if it fires. The operations in Kobe are atomic and computation progresses layer-by-layer. In effect, all the workers can work on only one layer at any point in time. In case of feedback loops, there is a delay of one whole iteration for simulating the recurrent state. 
     
-  Each device can run only one worker. The worker is a multithreaded program, which spawns multiple processes which process the Nodes. The child processes of the worker talk only to the main process, the main process has a cache which 
+  Each device can run only one worker. The worker spawns multiple processes which process the Nodes. The child processes of the worker talk only to the main process, the main process has an LRU ( least recently used ) cache which syncs with the global database ( Redis ) every time a node is processed. The LRU cache can hold only a handful of neurons at a time.  
 
 # The Kobe runtime
-  The Kobe runtime is 
+  The Kobe runtime is the code which gets executed on the remote devices i.e. the workers. The evaluation of Node and online training happens here. This is the place where the algorithm for the smallest time step of the simulation is defined.
 
 # Atomic operations
+  While computing a recurrent graph or a network, the hurdle is in determining the order in which each vertex in the graph or each node in the network are evaluated. As the ouput of the nodes is dependent on other nodes, changing the order changes the output. In Kobe, the Nodes are evaluated layer-by-layer. But within a single layer, what decides the order in which the Nodes are evaluated? There are two ways in which this can be done:
+  1. Asynchronously - Maintain a predetermined order ( could be based on propagation delays, such that the one with the least delay is evaluated first ) or evaluate all units at random.
+  2. Synchronously - Hold all the outputs of the nodes in that layer, and update them only when the whole layer is processed.
+  
+  It is not known which approach would work and which wouldn't. We have to try both. Currently, neither is implemented in Kobe. What is done is, the Nodes are evaluated according to a fixed order, of their position in the array. Approach #1 is in the roadmap of development. Approach #2 doesn't seem to be practical.
+ 
+# Control flow
 
 # The model of the cortex
 
@@ -132,4 +139,4 @@
    1. Redis operations are not threaded. Need to either use threadis, or some other alternative, where reads are parallel, but writes are sequential.
    2. There is a dirty LRU cache hack in which the functools library is modified to achieve the desired result. But this modification is in python. Thus the C implementation of functools ( which is a lot faster) cannot be used.
    3. The whole worker program can be made in a closer to hardware language like C or C++, but this would require converting or exporting the Node.py code into the same language.
-   4. Prevent immediate and individiual writes to database, make them buffered. 
+   4. Prevent immediate and individiual writes to database, make them buffered.
