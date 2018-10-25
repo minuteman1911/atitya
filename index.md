@@ -19,37 +19,74 @@
    I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to what problem Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). The problem though with ANNs of today is that they can solve only a specefic range of tasks and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
    ### Is AI a bubble?
    We don't know that yet; only time will tell. Most people today implement a technique called ML (Machine Learning) to make their applications smarter. ML has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing prowess increased manifold in the last two decades. AI is actually a broader term which may be vaguely summed up as an answer to the requirement : "Do anything but make my machine seem inteligent!". Thus, a very complex system of hardcoded rules, interdependent on each other could make up a good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network and the biological brain. 
-   Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot, that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the plasticity rules in the artificial brain are different.
-   Can today's AI make a machine possible of exhibiting conscious thought? Unlikely. 
+    Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot, that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the plasticity rules in the artificial brain are different.
+    Can today's AI make a machine possible of exhibiting conscious thought? Unlikely. 
          
 # Is it even possible ?
    The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all.
  
 # Difference between Kobe and other projects 
    There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have laid out the major differences between each. The descriptions are taken as they were from Wikipedia.
-   BRIAN is an open source package written in Python. It offers flexibility by giving users 
+   BRIAN is an open source Python package for simulating stdp neurons. It offers flexibility by giving users the option of writing their own model of neurons, and then converting it to a language closer to hardware for faster execution.
      
    The working of the human brain ( and other mammals alike ) is so elusive that it has spurred many governments across the world to start projects, which aim at ( more or less ) broadening our understanding of it.
-     
+   
 # Do we need to simulate everything?
    This section is totally biased towards my own personal views about computation and simulation, the reader should know better. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
    One goal of Kobe is to find the break-even point below which a simulation would make no sense, and produce garbled output, and beyond which, it is a plain waste of computing resources. 
-   There are multiple factors at play at once on multiple levels in the brain. Below is a table detailing the 
+   There are multiple factors at play at once on multiple levels in the brain. Below is a table, detailing the phenomena simulated in Kobe.
+   #### Morphology 
+   Name                           | Present in Kobe 
+   ------------------------------ | -----------------
+   Multiple neuron types          | Yes
+   Layer wise seperation of 
+   neuron groups                  | Yes
+   Large number of inter-layer and intra-layer connections        | Yes    
+   columnar organization          | Yes     
+   multi-compartment neurons      | No
+ 
+  #### Evaluation
+  Name                           | Present in Kobe 
+  ------------------------------ | ----------------
+  Leaky integrate and fire       | Yes
+  short term depression          | Yes
+  short term facilitation        | Yes
+  homeostatic regulation ( both micro as well as macro scale)  | Yes
+  consideration of propagation delays | Possible
+  multiple neurotransmitters     | Possible
+  stochastically firing neurons  | Possible
+  activation dependent on spine 
+  location on denrite            | No
      
      
+  #### Plasticity
+  Name                           | Present in Kobe 
+  ------------------------------ | ----------------
+  spike-time dependent plasticity| Yes
+  reward based learning          | Yes
+     
+   
+  #### Pruning  
+  Name                           | Present in Kobe 
+  ------------------------------ | ----------------
+  remove least active            | Yes
+   
+   All these phenomena can be simulated along with others. Eg : stdp and reward based learning can both be present on a particular synapse.
+        
 # Software Architecture
-  Kobe has mainly three top-level components:
+  Kobe has mainly three components:
   ## 1. Node
    Node is nothing but the smallest unit which can be 'processed' by a worker. Basicaly it is the counterpart of a neuron. Only neurons can be nodes, unlike in some other projects where a probing device (which lets you measure the activity of a neuron) can also be a Node. 
   ## 2. Ensemble
    An ensemble is a large group of nodes which can be processed atomically. By definition, an Ensemble means an aggregation or a group of many things. It is equivalent to 'a collection of multiple cliques of neurons'. 
   ## 3. Network
-   It can be defined as the computation graph, the order to follow while evaluating the Ensembles. Kobe first converts any given directed graph into a  Directed Acyclic; it removes any cycles if present. Then, it evaluates each Ensemble according to the graph ( more on this below ) 
+   It can be defined as the computation graph, the order to follow while evaluating the Ensembles. Kobe first converts any given directed graph into a Directed Acyclic Graph; it removes any cycles if present. Then, it evaluates each Ensemble according to the graph ( more on this below ) 
     
     
   Kobe uses Redis internally to store each node of the entire graph as a json string. This makes the whole graph accessible from any device on the local area network. Thus Kobe is scalable horizontally with the number of cpu cores. Each device has a separate worker running on it, which subscribes to a global queue. The main server issues jobs ( a job in Kobe is a command for worker containing the Node IDs to be processed ). 
 
 # The Kobe runtime
+  The Kobe runtime is 
 
 # Atomic operations
 
@@ -66,8 +103,6 @@
 # Pruning 
 
 # Propagation delays
-
-
 
 # Computation of recurrent loops
 
