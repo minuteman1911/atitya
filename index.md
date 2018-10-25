@@ -16,19 +16,23 @@
       3. Someone who wants to do NLP.
     
 # TL;DR 
-     I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to what problem Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks.
+     I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to what problem Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). The problem though with ANNs of today is that they can solve only a specefic range of tasks and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. 
+     ### Is AI a bubble?
+         We do not know that yet. 
      
      
 # Software Architecture
-    Kobe uses Redis internally to store each node of the entire graph as a json string. This makes the whole graph to be accessible from any device on the local area network. Each device has a separate worker running on it, which subscribes to a global queue
+    Kobe has mainly three top-level components:
+    ## 1. Node
+        Node is nothing but the smallest unit which can be 'processed' by a worker. Basicaly its 
+    ## 2. Ensemble
+        An ensemble is a large group of nodes which can be processed
+    ## 3. Network
+    
+    
+    Kobe uses Redis internally to store each node of the entire graph as a json string. This makes the whole graph accessible from any device on the local area network. Thus Kobe is scalable horizontally with the number of cpu cores. Each device has a separate worker running on it, which subscribes to a global queue. The main server issues jobs ( a job in Kobe is a command for worker containing the Node IDs to be processed ). 
 
 # The Kobe runtime
-
-# Node
-
-# Ensemble
-
-# Network
 
 # The model of the cortex
 
