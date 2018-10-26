@@ -169,8 +169,8 @@ In the following sub-sections, we shall dive into the structure and function of 
 # The Agent, Environment and the Teacher
   The Gym Environment, the Agent ( Kobe ) and the Teacher together complete the loop which is essential for training the Agent.
 
-# The problems
-  There are some issues in Kobe which affect the effeciency. Following is the whole list
+# Issues
+  There are some known issues in Kobe which affect the effeciency. Following is the whole list
    1. Redis operations are not threaded. Need to either use threadis, or some other alternative, where reads are parallel, but writes are sequential.
    2. There is a dirty LRU cache hack in which the functools library is modified to achieve the desired result. But this modification is in python. Thus the C implementation of functools ( which is a lot faster) cannot be used.
    3. The whole worker program can be made in a closer to hardware language like C or C++, but this would require converting or exporting the Node.py code into the same language.
