@@ -24,7 +24,7 @@
    ### Difference between ANNs and biological NNs
   Perhaps the most important difference in ANNs and bioloical neural networks is that of time. ANNs pass information to each other based on the intensity of their output. On the contrary, biological neurons seem to communicate based on modulation of their firing rate. Not only timing, but also the inter-connectivity is different in biological neural networks. They are characterized by large recurrent feedback loops, and seem to be organized into distinct layers. I simply cannot mention and explain all the differences here, the list is extensive.      
    ### Is it even possible ?
-   The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all.
+   The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to replicate the task which can be performed easily by an ANN by using different network topology and different learning and traning algorithms.
  
 # Difference between Kobe and other projects 
  There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have laid out the major differences between each.
@@ -45,11 +45,13 @@
   large number of inter-layer and intra-layer connections | Yes    
   columnar organization          | Yes     
   multi-compartment neurons      | No
+  simulation of individual synapse to micro level | No
+  intraneuronal communication | No
  
   #### Evaluation
   Name                           | Present in Kobe 
   ------------------------------ | ----------------
-  leaky integrate and fire       | Yes
+  spatio-temporal leaky integrate and fire       | Yes
   homeostatic regulation ( both micro as well as macro scale)  | Yes
   consideration of propagation delays | Possible
   multiple neurotransmitters     | Possible
@@ -67,10 +69,12 @@
   heterosynaptic plasticity      | Yes
      
    
-  #### Pruning  
+  #### Pruning and generation 
   Name                           | Present in Kobe 
   ------------------------------ | ----------------
-  remove least active            | Yes
+  node pruning                   | Yes
+  connection pruning             | Yes
+  formation of new connection ( opposite of pruning )  | Possible
    
   All these phenomena can be simulated along with others. Eg : stdp and reward based learning can both be present on a particular synapse.
   
@@ -128,28 +132,42 @@ In the following sub-sections, we shall dive into the structure and function of 
    There exist numerous models of a neuron in literature, which define its behaviour. Out of these, the one which is modelled in Kobe by default is integrate and fire with exponential decay. This is simple to implement, and also computationally efficient. **While there is no restriction on writing differential equations and executing them in the Kobe runtime, it is discouraged.** It is better to first convert any differential equations into an equivalent heuristic, this is what is done in the default example.
 
  ## Plasticity 
-   This is the most elusive part of the whole story. There are **contradictory** findings on how plasticity works. A consensus needs to be reached on this matter, and it must not be unilateral. Plasticity is thought to be dependent on the balance which is reached by the push and pull effects of various phenomena at play in vivo. There is competition in the brain at every level, micro (spanning few neurons ) and macro ( spanning multiple neurons, or even a whole cortical area ). Also, the rules of plasticity seem to be different between different regions (cortex vs. hippocampus). Plasticity can be synaptic as well as non-synaptic, homo- as well as hetero- synaptic. Hetero-synaptic plasticity and neuromodulation are both macro level effects which can be modelled in Kobe. Infact, it is unclear what is the distinction between them.  
-
+   This is the most elusive part of the whole story and at the end of this section you are going to think that it is impossible to ever simulate the brain. There are **contradictory** findings on how plasticity works. A consensus needs to be reached on this matter, and it must not be unilateral. Plasticity is thought to be dependent on the balance which is reached by the push and pull effects of various phenomena at play in vivo. There is competition in the brain at every level, micro (spanning few neurons ) and macro ( spanning multiple neurons, or even a whole cortical area ). Also, the rules of plasticity seem to be different between different regions (cortex vs. hippocampus). Plasticity can be synaptic as well as non-synaptic, homo- as well as hetero- synaptic. Hetero-synaptic plasticity and neuromodulation are both macro level effects which can be modelled in Kobe. Infact, it is unclear what is the distinction between them.  
+  ### Spike-time dependent plasticity
+   Donald Hebb in 1949 formulated what is known today as Hebbian rule. Later experiments revealed that a temporal component 
   ### Reward & Novelty based learning
    This is in part similar to heteroplasticity.  When a reward in the form of neurotransmitter is released, it affects a large area in the brain. In Kobe, this is modelled by a macro-scale "variable" which is **accessible** to all the nodes in a particular Ensemble. This variable could then be used to scale the intensity of activation of all the nodes in that Ensemble.
   ### Multiple neurotransmitters
-   A biological neuron has receptors 
+   A biological neuron has receptors which respond to multiple neurotransmitter, rather than just one. This is what makes things even more complicated. There are around 100 total neurotransmitters in the brain, but a handful of them are active, Even then, it complicates things. That's because every neurotransmitter released byb the pre-synaptic neuron affects the postsynaptic neuron differntly, and the effects may be combined or seperate. Thus, say a neuron responds to three neurotransmitters A, B and C, and say it has 5,000 pre-synaptic connections, we are talking about maintaining 15,000 connections, for each of the 3 types of neurotransmitters. 
 
  ## Pruning 
-
+   As infants, we start off with a whole lot more neurons than we have as adults. The brain compromises the quantity of neurons for quality. Also, the weights in the network change over time. Thus, there are two types of pruning: 
+   
+   ### Node pruning
+   The neurons which are least active, are pruned off. This operation is done offline ( outside Kobe Runtime ) after a predefined number of iterations.
+   
+   ### Connection pruning ( and generation )
+   This is a form of plasticity, whereby the connections made by the neurons change over time. Weak connections are pruned, and it is possible to generate new connections ( maybe towards the nodes which are most active ). This operation is done online as it is more efficient.
+   
  ## Propagation delays
-
+  Each neuron has a finite axonal and dendritic length which is thought to contribute towards the overall output of the network. Until recently, it was assumed that propagation delays are immaterial in determining the output of a network. 
+  
  ## Recurrent loops
+  A biological brain has recurrent loops everywhere; be it to and from the same neuron, from one neuron to other neurons, or from multiple neurons to multiple other neurons (cortico-thalamic pathways).
 
 # Sensors and Actuators
 
-# What is OpenAI
+# What is OpenAI Gym
+  OpenAI Gym is a toolkit for developing and comparing reinforcement learning algorithms. Kobe as a whole is an Agent in OpenAI Gym. Gym has two components, the Agent and the Environment. The Environment is what the name suggests, it is a virtual environment, inside which an Agent is simulated. Basically it provides constraints or boundaries to the Agent. The Agent can be any AI program. Think of the environment like a box, and the Agent as a mouse placed in the box, assigned to do a particular task. The Environment here provides the input to the Agent and takes its output, and reacts to it.
 
-# OpenAI Environment
+# Why is Gym needed ?
+  The feedback between a host and the environment is very important for the host to learn about the environment. By simulating the Agent inside the Gym Environment, we are completing this loop.
 
 # Teacher 
+  The teacher is someone who checks whether an output is correct and gives a reward in return. It is essentially an ANN trained for the specific task of checking whether the simulated output is as expected. This is done just for the automation of the manual task of checking the output of the Network.
 
 # The Agent, Environment and the Teacher
+  The Gym Environment, the Agent ( Kobe ) and the Teacher together complete the loop which is essential for training the Agent.
 
 # The problems
   There are some issues in Kobe which affect the effeciency. Following is the whole list
