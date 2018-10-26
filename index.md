@@ -3,7 +3,7 @@
   Please follow the steps given in the README.md file to install Kobe
 
 # What Kobe is
-  Kobe can be defined as an open source simulation tool written in Python which can model an artificial brain, along with its environment ( using OpenAI Gym )
+  Kobe can be defined as an open source simulation tool written in Python which can model an artificial spiking neural network, along with its environment ( using OpenAI Gym )
     **It is still largely meant for research and has no practical purpose as of now.**
 
 # What Kobe isn't !
@@ -150,13 +150,14 @@ In the following sub-sections, we shall dive into the structure and function of 
    This is a form of plasticity, whereby the connections made by the neurons change over time. Weak connections are pruned, and it is possible to generate new connections ( maybe towards the nodes which are most active ). This operation is done online as it is more efficient.
    
  ## Propagation delays
-  Each neuron has a finite axonal and dendritic length which is thought to contribute towards the overall output of the network. Until recently, it was assumed that propagation delays are immaterial in determining the output of a network. 
+  Each neuron has a finite axonal and dendritic length which is thought to contribute their propagation delays towards the overall output of the network. Until recently, it was assumed that propagation delays are immaterial in determining the output of a network. 
   
  ## Recurrent loops
   A biological brain has recurrent loops everywhere; be it to and from the same neuron, from one neuron to other neurons, or from multiple neurons to multiple other neurons (cortico-thalamic pathways).
 
 # Sensors and Actuators
-
+  This is perhaps the most challenging part to implement. A Sensor in Kobe is the equivalent of a notepad on which the Environment writes the inputs to the Agent. The Agent picks them up from there, processes them, and writes the outputs to the Actuator. Sensor and Actuator are callable Python objects which are flexible enough to allow calling of custom or built-in methods for mapping of the observation ( input to Agent ) to the input layer in the Network ( Agent ). It is still not very well defined even in Kobe how the outputs can be mapped from a bunch of output neurons to the Actuator.  
+  
 # What is OpenAI Gym
   OpenAI Gym is a toolkit for developing and comparing reinforcement learning algorithms. Kobe as a whole is an Agent in OpenAI Gym. Gym has two components, the Agent and the Environment. The Environment is what the name suggests, it is a virtual environment, inside which an Agent is simulated. Basically it provides constraints or boundaries to the Agent. The Agent can be any AI program. Think of the environment like a box, and the Agent as a mouse placed in the box, assigned to do a particular task. The Environment here provides the input to the Agent and takes its output, and reacts to it.
 
