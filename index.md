@@ -4,7 +4,7 @@
 
 # What Kobe is
   Kobe can be defined as an open source simulation tool written in Python which can model an artificial brain, along with its environment ( using OpenAI Gym )
-    **It is still largely meant for research and has no practical purpose as of yet.**
+    **It is still largely meant for research and has no practical purpose as of now.**
 
 # What Kobe isn't !
   Kobe is not a traditional machine learning framework which we normally use for classification, regression, image recognition or natural language processing tasks. For all the above tasks, there already are amazing libraries out there like scikit-learn, Tensorflow, Theano etc.
@@ -122,7 +122,7 @@ In the following sub-sections, we shall dive into the structure and function of 
    The neocortex is roughly a 2-4 mm thick region made up mostly of neuronal cell bodies. It was discovered in the mid 20th Century ( Mountcastle et al.) that the neocortex is organized into distinct layers. Each layer of the neocortex is stacked on top of the other, forming a column of sorts. This columnar organization is repeated throughout the cortex, with some differences in the connectivity between different areas. Eg : Layer 4 of the cortex is thick in areas where it receives inputs from subcortical regions i.e. the thalamus. In other regions, Layer 4 receives cortico-cortical feedforward connections and is thinner. Though this is an area of ongoing research, enough information is now available than ever was, which should be taken advantage of. 
    
  ### Modelling other parts
-   The other significant parts in the mammalian brain are thalamus, TRN ( thalamic reticular nucleus ), basal ganglia, substantia nigra etc. These parts work in conjuncion with one another to produce the conscious experience. It is a well known fact that there is a humongous number of feedback conections from the cortex to the thalamus. Some theories suggest that these connections along with the TRN ( which is inhibitory ) act as a filter for the information passed on to the cortex. The substantia nigra is responsible for regulating the dopamine levels in the cortex.
+   The other significant parts in the mammalian brain are thalamus, TRN ( thalamic reticular nucleus ), basal ganglia, substantia nigra etc. These parts work in conjuncion with one another to produce the conscious experience. It is a well known fact that there is a humongous number of feedback connections from the cortex to the thalamus. Some theories suggest that these connections along with the TRN ( which is inhibitory ) act as a filter for the information passed on to the cortex. The substantia nigra is responsible for regulating the dopamine levels in the cortex.
    
  ## Evaluation
  First, lets define some terminology:
