@@ -33,7 +33,7 @@
  The working of the human brain ( and other mammals alike ) is so elusive that it has prompted many governments across the world to start initiatives, which aim at ( more or less ) broadening our understanding of it.
    
 # Do we need to simulate everything?
- This section is totally biased towards my own personal views about computation and simulation; the reader should know better. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
+ This section (and maybe some of the subsequent ones) is biased towards my own personal views about computation and simulation; the reader should know better. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
  One goal of Kobe is to find the break-even point of the detail below which a simulation would make no sense, and produce garbled output, and beyond which, is a plain waste of computing resources. 
  There are multiple factors at play at once on multiple levels in the brain. Below is a table, detailing the phenomena simulated in Kobe.
   #### Morphology 
@@ -66,7 +66,7 @@
   reward based learning / neuromodulation | Yes
   short term depression          | Yes
   short term facilitation        | Yes
-  heterosynaptic plasticity      | Yes
+  heterosynaptic plasticity      | Possible
      
    
   #### Pruning and generation 
@@ -101,7 +101,7 @@
     
   Each device can run only one worker. The worker spawns multiple processes which process the Nodes. The child processes of the worker talk only to the main process, the main process has an LRU ( least recently used ) cache which syncs with the global database ( Redis ) every time a node is processed. The LRU cache can hold only a handful of neurons at a time.  
 
-# The Kobe runtime
+# The Kobe Runtime
   The Kobe runtime is the code which gets executed on the remote devices i.e. the workers. The evaluation of Node and online training happens here. This is the place where the algorithm for the smallest time step of the simulation is defined.
 
 # Atomic operations
@@ -115,6 +115,7 @@
 
 # Model of the brain
 In the following sub-sections, we shall dive into the structure and function of the brain
+
 ## Morphology
  A huge difference between an ANN and a biological one is cytoarchitectonic. The ANNs are based on our understanding of how the brain might arrange representations into a hierarchy. But what we observe in a real brain is a combination of sideways hierarchy as well as a vertical hierarchy. Every primary sensory area in the neocortex is connected to a higher functional area which is adjoining the primary area ( sideways hierarchy ) and every area itself has numerous inter-layer feedforward and feedback connections ( vertical hierarchy ). Although a lot of research is now being conducted in this direction, inter-areal cortico-cortical connectivity is still kind of a gray area in neuroscience ( pun intended ).
  
@@ -126,22 +127,27 @@ In the following sub-sections, we shall dive into the structure and function of 
    
  ## Evaluation
  First, lets define some terminology:
- macro-scale effects : phenomena spanning multiple neurons, hundreds to thousands to millions, maybe even a whole cortical area 
- micro-scale effects : phenomena spanning a small number of neurons, 2 - 10
+  macro-scale effects : phenomena spanning multiple neurons, hundreds to thousands to millions, maybe even a whole cortical area 
+  
+  micro-scale effects : phenomena spanning a small number of neurons, 2 - 10
+  
   ### Activation function
    There exist numerous models of a neuron in literature, which define its behaviour. Out of these, the one which is modelled in Kobe by default is integrate and fire with exponential decay. This is simple to implement, and also computationally efficient. **While there is no restriction on writing differential equations and executing them in the Kobe runtime, it is discouraged.** It is better to first convert any differential equations into an equivalent heuristic, this is what is done in the default example.
 
  ## Plasticity 
    This is the most elusive part of the whole story and at the end of this section you are going to think that it is impossible to ever simulate the brain. There are **contradictory** findings on how plasticity works. A consensus needs to be reached on this matter, and it must not be unilateral. Plasticity is thought to be dependent on the balance which is reached by the push and pull effects of various phenomena at play in vivo. There is competition in the brain at every level, micro (spanning few neurons ) and macro ( spanning multiple neurons, or even a whole cortical area ). Also, the rules of plasticity seem to be different between different regions (cortex vs. hippocampus). Plasticity can be synaptic as well as non-synaptic, homo- as well as hetero- synaptic. Hetero-synaptic plasticity and neuromodulation are both macro level effects which can be modelled in Kobe. Infact, it is unclear what is the distinction between them.  
+  
   ### Spike-time dependent plasticity
    Donald Hebb in 1949 formulated what is known today as Hebbian rule. Later experiments revealed that a temporal component 
+  
   ### Reward & Novelty based learning
    This is in part similar to heteroplasticity.  When a reward in the form of neurotransmitter is released, it affects a large area in the brain. In Kobe, this is modelled by a macro-scale "variable" which is **accessible** to all the nodes in a particular Ensemble. This variable could then be used to scale the intensity of activation of all the nodes in that Ensemble.
+  
   ### Multiple neurotransmitters
-   A biological neuron has receptors which respond to multiple neurotransmitter, rather than just one. This is what makes things even more complicated. There are around 100 total neurotransmitters in the brain, but a handful of them are active, Even then, it complicates things. That's because every neurotransmitter released byb the pre-synaptic neuron affects the postsynaptic neuron differntly, and the effects may be combined or seperate. Thus, say a neuron responds to three neurotransmitters A, B and C, and say it has 5,000 pre-synaptic connections, we are talking about maintaining 15,000 connections, for each of the 3 types of neurotransmitters. 
+   A biological neuron has receptors which respond to multiple neurotransmitter, rather than just one. This is what makes things even more complicated. There are around 100 total neurotransmitters in the brain, but a handful of them are active. Even then, it complicates things. That's because every neurotransmitter released by the pre-synaptic neuron affects the postsynaptic neuron differently, and the effects may be combined or seperate. Thus, say a neuron responds to different neurotransmitters and say it has 5,000 pre-synaptic connections, we are talking about maintaining 15,000 connections, for each of the 3 types of neurotransmitters. 
 
  ## Pruning 
-   As infants, we start off with a whole lot more neurons than we have as adults. The brain compromises the quantity of neurons for quality. Also, the weights in the network change over time. Thus, there are two types of pruning: 
+   As infants, we start off with a whole lot more neurons than we have as adults. Babies have all the neurons they will ever have. Thus we constantly lose neurons throughout our life. Maybe the brain compromises the quantity of neurons for quality ( representation of complex ideas ). Also, the weights in the network change over time. These are simulated in Kobe in the following ways: 
    
    ### Node pruning
    The neurons which are least active, are pruned off. This operation is done offline ( outside Kobe Runtime ) after a predefined number of iterations.
@@ -150,13 +156,13 @@ In the following sub-sections, we shall dive into the structure and function of 
    This is a form of plasticity, whereby the connections made by the neurons change over time. Weak connections are pruned, and it is possible to generate new connections ( maybe towards the nodes which are most active ). This operation is done online as it is more efficient.
    
  ## Propagation delays
-  Each neuron has a finite axonal and dendritic length which is thought to contribute their propagation delays towards the overall output of the network. Until recently, it was assumed that propagation delays are immaterial in determining the output of a network. 
+  Each neuron has finite axonal and dendritic lengths having a propagation delay which are thought to contribute towards the overall delay of the network. Untill recently, it was assumed that propagation delays are immaterial in determining the output of a network.
   
  ## Recurrent loops
-  A biological brain has recurrent loops everywhere; be it to and from the same neuron, from one neuron to other neurons, or from multiple neurons to multiple other neurons (cortico-thalamic pathways).
+  A biological brain has recurrent loops everywhere; be it to and from the same neuron, from one neuron to other neurons, or from multiple neurons to multiple other neurons (cortico-thalamic pathways). Here, the destinations of feedback loops are evaluated in the next iteration ( forward pass ).  
 
 # Sensors and Actuators
-  This is perhaps the most challenging part to implement. A Sensor in Kobe is the equivalent of a notepad on which the Environment writes the inputs to the Agent. The Agent picks them up from there, processes them, and writes the outputs to the Actuator. Sensor and Actuator are callable Python objects which are flexible enough to allow calling of custom or built-in methods for mapping of the observation ( input to Agent ) to the input layer in the Network ( Agent ). It is still not very well defined even in Kobe how the outputs can be mapped from a bunch of output neurons to the Actuator.  
+  This is perhaps the most challenging part to implement in code. A Sensor in Kobe is the equivalent of a temporary scratchpad on which the Environment writes the inputs to the Agent. The Agent picks them up from there, processes them, and writes the outputs to the Actuator. Sensor and Actuator are callable Python objects which are flexible enough to allow calling of custom or built-in methods for mapping of the observation ( input to Agent ) to the input layer in the Network ( Agent ). It is still not very well defined even in Kobe how the outputs can be mapped from a bunch of output neurons to the Actuator.  
   
 # What is OpenAI Gym
   OpenAI Gym is a toolkit for developing and comparing reinforcement learning algorithms. Kobe as a whole is an Agent in OpenAI Gym. Gym has two components, the Agent and the Environment. The Environment is what the name suggests, it is a virtual environment, inside which an Agent is simulated. Basically it provides constraints or boundaries to the Agent. The Agent can be any AI program. Think of the environment like a box, and the Agent as a mouse placed in the box, assigned to do a particular task. The Environment here provides the input to the Agent and takes its output, and reacts to it.
