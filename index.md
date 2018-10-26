@@ -101,28 +101,36 @@
 
 # Atomic operations
   While computing a recurrent graph or a network, the hurdle is in determining the order in which each vertex in the graph or each node in the network are evaluated. As the ouput of the nodes is dependent on other nodes, changing the order changes the output. In Kobe, the Nodes are evaluated layer-by-layer. But within a single layer, what decides the order in which the Nodes are evaluated? There are two ways in which this can be done:
-  1. Asynchronously - Maintain a predetermined order ( could be based on propagation delays, such that the one with the least delay is evaluated first ) or evaluate all units at random.
+  1. Asynchronously - Maintain a predetermined order ( could be based on propagation delays, such that the one with the least delay is evaluated first ) or evaluate all nodes at random.
   2. Synchronously - Hold all the outputs of the nodes in that layer, and update them only when the whole layer is processed.
   
-  It is not known which approach would work and which wouldn't. We have to try both. Currently, neither is implemented in Kobe. What is done is, the Nodes are evaluated according to a fixed order, of their position in the array. Approach #1 is in the roadmap of development. Approach #2 doesn't seem to be practical.
+  It is not known which approach would work and which wouldn't, both should be tried. Currently, neither is implemented in Kobe. What is done is, the Nodes are evaluated according to a fixed order, of their position in the array ( which kinda sucks ). Approach #1 is in the roadmap of development. Approach #2 doesn't seem to be practical.
  
 # Control flow
 
-# The model of the cortex
+# Model of the brain
+In the following sub-sections, we shall dive into the structure and function of the brain from the macro level to the micro level 
+## Morphology
+ A huge difference between an ANN and a biological one is cytoarchitectonic. The ANNs are based on our understanding of how the brain might arrange representations into a hierarchy. But what we observe in a real brain is a combination of sideways hierarchy as well as a vertical hierarchy. Every primary sensory area in the neocortex is connected to a higher functional area which is adjoining the primary area ( sideways hierarchy ) and every area itself has numerous inter-layer feedforward and feedback connections ( vertical hierarchy )
+ ### Canonical microcircuit of the neocortex
+   The neocortex is roughly a 2-4 mm thick region made up mostly of neuronal cell bodies. It was discovered in the mid 20th Century ( Mountcastle et al.) that the neocortex is organized into distinct layers. Each layer of the neocortex is stacked on top of the other, forming a column of sorts. This columnar organization is repeated throughout the cortex, with some differences between different areas. Eg : Layer 4 of the cortex is thick in areas where it receives inputs from subcortical regions i.e. the thalamus. In other regions, Layer 4 receives cortico-cortical feedforward connections and is thinner. Though this is an area of ongoing research, enough information is now available than ever was, which should be taken advantage of. 
+   
+ 
+ ### Models of other parts
+   The other parts in the mammalian brain are thalamus, TRN ( thalamic reticular nucleus ), basal ganglia, substantia nigra etc. These parts work in conjuncion with one another to produce the conscious experience. It is a well known fact that there is a humungous number of feedback conections from the cortex to the thalamus. Some theories suggest that these connections along with the TRN ( which is inhibitory ) act as a filter or information passed on to the cortex. The substantia nigra is responsible for regulating the dopamine levels in the cortex.
+   
+ ## Activation function
+   
 
-# Models of other parts
+ ## Plasticity 
 
-# Activation function
+ ## Reward & Novelty based learning
 
-# Plasticity 
+ ## Pruning 
 
-# Reward & Novelty based learning
+ ## Propagation delays
 
-# Pruning 
-
-# Propagation delays
-
-# Computation of recurrent loops
+ ## Recurrent loops
 
 # Sensors and Actuators
 
