@@ -3,20 +3,23 @@
   Please follow the steps given in the README.md file to install Kobe
 
 # What Kobe is
-  Kobe can be defined as an open source simulation tool written in Python which can model an artificial spiking neural network, along with its environment ( using OpenAI Gym )
+  Kobe is an open source simulation tool written in Python which can model artificial spiking neural networks, along with its environment ( using OpenAI Gym )
     **It is still largely meant for research and has no practical purpose as of now.**
 
 # What Kobe isn't !
   Kobe is not a traditional machine learning framework which we normally use for classification, regression, image recognition or natural language processing tasks. For all the above tasks, there already are amazing libraries out there like scikit-learn, Tensorflow, Theano etc.
     
 # When you should NOT use Kobe
-  If you are any of the following, go back, and come back only when you understand it ( or use the appropriate tool )
-   1. Beginner in AI/ML.
-   2. Someone who wants to do classical image classification.
-   3. Someone who wants to do NLP.
+   If you are solving a typical Classification/Regression or Clustering problem, then you should use the appropriate tool rather Kobe.
+    
+# Key features of Kobe
+   The key features of Kobe are:
+    1. Possible to place nodes (neurons) according to a layered topology (as found in the biological neocortex).
+    2. Supports macro-scale (spanning a large population of neurons) neuromodulation or homeostatis.
+    3. Possible to generate a large number of intra-layer and inter-layer connections.
     
 # TL;DR 
-   I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image procesding, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
+   I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image processing, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
    ### The future of AI
    Most people today implement a technique called ML (Machine Learning) to make their applications smarter. Although ML has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing power increased manifold in the last two decades. AI is actually a broader term which may be vaguely summed up as a solution to the problem : "Do anything but make my machine seem intelligent!". Thus, a very complex system of hardcoded rules, interdependent on each other could make up a good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest advancement of ANNs employed in an AI system) and the biological brain. 
     Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot; that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the learning rules in the artificial neural network are different from those that of the biological counterpart.
@@ -26,10 +29,11 @@
    ### Is it even possible ?
    The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to replicate a task which can be performed easily by an ANN using a completely different network topology and different learning and training algorithms which closely replicate the biological brain.
  
-# Difference between Kobe and other projects 
- There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have laid out the major differences between each.
+# Other similar projects
+ There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have described the major ones in short.
  BRIAN is an open source Python package for simulating spiking neurons. It offers flexibility by giving users the option of writing their own model of neurons, and then converting it to a language closer to hardware for faster execution.
-     
+ GENESIS is a software which can simulate large scale networks, like the neocortex.
+ NEURON is similar to GENESIS and comes with a GUI builder for creating networks easily. Also useful for modelling an individual neuron.
  The working of the human brain ( and other mammals alike ) is so elusive that it has prompted many governments across the world to start initiatives, which aim at ( more or less ) broadening our understanding of it.
    
 # Do we need to simulate everything?
@@ -103,7 +107,7 @@
   Each device can run only one worker. The worker spawns multiple processes which process the Nodes. The child processes of the worker talk only to the main process, the main process has an LRU ( least recently used ) cache which syncs with the global database ( Redis ) every time a node is processed. The LRU cache can hold only a handful of neurons at a time.  
 
 # The Kobe Runtime
-  The Kobe runtime is the code which gets executed on the remote devices i.e. the workers. The evaluation of Node and online training happens here. This is the place where the algorithm for the smallest time step of the simulation is defined.
+  The Kobe runtime is the code which gets executed on the remote devices i.e. the workers. The evaluation of Node state and online training happens here. This is the place where the algorithm for the smallest time step of the simulation is defined.
 
 # Atomic operations
   While computing a recurrent graph or a network, the hurdle is in determining the order in which each vertex in the graph or each node in the network are evaluated. As the ouput of the nodes is dependent on other nodes, changing the order changes the output. In Kobe, the Nodes are evaluated layer-by-layer. But within a single layer, what decides the order in which the Nodes are evaluated? There are two ways in which this can be done:
@@ -111,17 +115,18 @@
   2. Synchronously - Hold all the outputs of the nodes in that layer, and update them only when the whole layer is processed.
   
   It is not known which approach would work and which wouldn't, both should be tried and tested. Currently, neither is implemented in Kobe in its entirety. Approach #1 seems plausible and is in the roadmap of development. Approach #2 seems not only impractical but also difficult to implement.
+ 
  ### Current implementation in Kobe
-  In Kobe, a small group of Nodes are processed in batches. These batches are put on the global queue sequentially, but they are picked up by the workers rndomly
+  In Kobe, a small group of Nodes are processed in batches. These batches are put on the global queue sequentially, but they are picked up by the workers randomly
  
  
 # Control flow
 
 # Model of the brain
-In the following sub-sections, we shall dive into the structure and function of the brain
+In the following sub-sections, we shall dive into the structure and functioning of the neurons in the brain
 
 ## Morphology
- A huge difference between an ANN and a biological one is cytoarchitectonic. The ANNs are based on our understanding of how the brain might arrange representations into a hierarchy. But what we observe in a real brain is a combination of sideways hierarchy as well as a vertical hierarchy. Every primary sensory area in the neocortex is connected to a higher functional area which is adjoining the primary area ( sideways hierarchy ) and every area itself has numerous inter-layer feedforward and feedback connections ( vertical hierarchy ). Although a lot of research is now being conducted in this direction, inter-areal cortico-cortical connectivity is still kind of a gray area in neuroscience ( pun intended ).
+ A huge difference between an ANN and a biological one is morphological. The neocortex is cytoarchitectonically composed of multiple layers stacked on top of each other. The ANNs are based on our understanding of how the brain might arrange representations into a hierarchy. But what we observe in a real brain is a combination of sideways hierarchy as well as a vertical hierarchy. Every primary sensory area in the neocortex is connected to a higher functional area which is adjoining the primary area ( sideways hierarchy ) and every area itself has numerous inter-layer feedforward and feedback connections ( vertical hierarchy ). Although a lot of research is now being conducted in this direction, inter-areal cortico-cortical connectivity is still kind of a gray area in neuroscience ( pun intended ).
  
  ### Canonical microcircuit of the neocortex
    The neocortex is roughly a 2-4 mm thick region made up mostly of neuronal cell bodies. It was discovered in the mid 20th Century ( Mountcastle et al.) that the neocortex is organized into distinct layers. Each layer of the neocortex is stacked on top of the other, forming a column of sorts. This columnar organization is repeated throughout the cortex, with some differences in the connectivity between different areas. Eg : Layer 4 of the cortex is thick in areas where it receives inputs from subcortical regions i.e. the thalamus. In other regions, Layer 4 receives cortico-cortical feedforward connections and is thinner. Though this is an area of ongoing research, enough information is now available than ever was, which should be taken advantage of. 
@@ -130,10 +135,10 @@ In the following sub-sections, we shall dive into the structure and function of 
    The other significant parts in the mammalian brain are thalamus, TRN ( thalamic reticular nucleus ), basal ganglia, substantia nigra etc. These parts work in conjuncion with one another to produce the conscious experience. It is a well known fact that there is a humongous number of feedback connections from the cortex to the thalamus. Some theories suggest that these connections along with the TRN ( which is inhibitory ) act as a filter for the information passed on to the cortex. The substantia nigra is responsible for regulating the dopamine levels in the cortex.
    
  ## Evaluation
- First, lets define some terminology:
+ First, lets define some terminology used here:
   macro-scale effects : phenomena spanning multiple neurons, hundreds to thousands to millions, maybe even a whole cortical area 
   
-  micro-scale effects : phenomena spanning a small number of neurons, 2 - 10
+  micro-scale effects : phenomena spanning one or two neurons
   
   ### Activation function
    There exist numerous models of a neuron in literature, which define its behaviour. Out of these, the one which is modelled in Kobe by default is integrate and fire with exponential decay. This is simple to implement, and also computationally efficient. **While there is no restriction on writing differential equations and executing them in the Kobe runtime, it is discouraged.** It is better to first convert any differential equations into an equivalent heuristic, this is what is done in the default example.
@@ -142,7 +147,7 @@ In the following sub-sections, we shall dive into the structure and function of 
    This is the most elusive part of the whole story and at the end of this section you are going to think that it is impossible to ever simulate the brain. There are **contradictory** findings on how plasticity works. A consensus needs to be reached on this matter, and it must not be unilateral. Plasticity is thought to be dependent on the balance which is reached by the push and pull effects of various phenomena at play in vivo. There is competition in the brain at every level, micro (spanning few neurons ) and macro ( spanning multiple neurons, or even a whole cortical area ). Also, the rules of plasticity seem to be different between different regions (cortex vs. hippocampus). Plasticity can be synaptic as well as non-synaptic, homo- as well as hetero- synaptic. Hetero-synaptic plasticity and neuromodulation are both macro level effects which can be modelled in Kobe. Infact, it is unclear what is the distinction between them.  
   
   ### Spike-time dependent plasticity
-   Donald Hebb in 1949 formulated what is known today as Hebbian rule of learning. This rule is famously known by the phrase "Neurons that fire together, wire together". Later experiments revealed that a temporal component is a necessary factor which determines whether the neurons' association with other neurons increases or decreases. If a neuron fires before another one fires, then actually their association decreases i.e. the weight between them decreases, this is known as extended the extended hebbian rule. This can be modelled as the stdp rule or a window rule ( which is computationally more efficient )
+   Donald Hebb in 1949 formulated what is known today as Hebbian rule of learning. This rule is famously known by the phrase "Neurons that fire together, wire together". Later experiments revealed that a temporal component is a necessary factor which determines whether the neurons' association with other neurons increases or decreases. If a neuron fires before another one fires, then actually their association decreases i.e. the weight between them decreases This can be modelled as the stdp rule or a window rule ( which is computationally more efficient )
   
   ### Reward & Novelty based learning
    This is in part similar to heteroplasticity.  When a reward in the form of neurotransmitter is released, it affects a large area in the brain. In Kobe, this is modelled by a macro-scale "variable" which is **accessible** to all the nodes in a particular Ensemble. This variable could then be used to scale the intensity of activation of all the nodes in that Ensemble.
@@ -160,7 +165,7 @@ In the following sub-sections, we shall dive into the structure and function of 
    This is a form of plasticity, whereby the connections made by the neurons change over time. Weak connections are pruned, and it is possible to generate new connections ( maybe towards the nodes which are most active ). This operation is done online as it is more efficient.
    
  ## Propagation delays
-  Every biological neuron has finite axonal and dendritic lengths having an intrinsic propagation delay which are thought to contribute towards the overall delay of the network. Untill recently, it was assumed that propagation delays are immaterial in determining the output of a network.
+  Every biological neuron has finite axonal and dendritic lengths having an intrinsic propagation delay which are thought to contribute towards the overall delay of the network.
   
  ## Recurrent loops
   A biological brain has recurrent loops everywhere; be it to and from the same neuron, from one neuron to other neurons, or from multiple neurons to multiple other neurons (cortico-thalamic pathways). Here, the destinations of feedback loops are evaluated in the next iteration ( forward pass ). Meaning, there is a delay of whole one iteration before the Node or Nodes which are fed back are evaluated again. In any given iteration, the outputs from previous iteration are already available along with the inputs from the current iteration.
@@ -172,7 +177,7 @@ In the following sub-sections, we shall dive into the structure and function of 
   OpenAI Gym is a toolkit for developing and comparing reinforcement learning algorithms. Kobe as a whole is an Agent in OpenAI Gym. Gym has two components, the Agent and the Environment. The Environment is what the name suggests, it is a virtual environment, inside which an Agent is simulated. Basically it provides constraints or boundaries to the Agent. The Agent can be any AI program. Think of the environment like a box, and the Agent as a mouse placed in the box, assigned to do a particular task. The Environment here provides the input to the Agent and takes its output, and reacts to it.
 
 # Why is Gym needed ?
-  The feedback between a host and the environment is very important for the host to learn about the environment. By simulating the Agent inside the Gym Environment, we are completing this loop.
+  The feedback loop between a host and the environment is very important for the host to learn about the environment. By simulating the Agent inside the Gym Environment, we are completing this loop.
 
 # Teacher 
   The teacher is someone who checks whether an output is correct and gives a reward in return. It is essentially an ANN trained for the specific task of checking whether the simulated output is as expected. This is done just for the automation of the manual task of checking the output of the Network.
