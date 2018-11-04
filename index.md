@@ -14,9 +14,9 @@
     
 # Key features of Kobe
    The key features of Kobe are:
-    l. Possible to place nodes (neurons) according to a layered topology (as found in the biological neocortex) with a NeuroML like YAML file.
-    l. Supports macro-scale (spanning a large population of neurons) neuromodulation or homeostatis.
-    l. Possible to generate a large number of intra-layer and inter-layer connections.
+   1. Possible to place nodes (neurons) according to a layered topology (as found in the biological neocortex) with a NeuroML like YAML file.
+   2. Supports macro-scale (spanning a large population of neurons) neuromodulation or homeostatis.
+   3. Possible to generate a large number of intra-layer and inter-layer connections.
     
 # TL;DR 
    I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image processing, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
@@ -39,8 +39,8 @@
  NEURON is similar to GENESIS and comes with a GUI builder for creating networks easily. Also useful for modelling an individual neuron.
  
  ## Some key differences between these projects and Kobe are:
-   l. Kobe tries to create a non-ideal model of the brain as opposed to a completely ideal biophysical model. In Kobe, we consider a node as a point neuron and modelling of intraneuronal dynamics, though possible, is discouraged. This is explained in more detail in the next section.
-   l. A Network in Kobe is actually an OpenAI Gym Agent, which is present in an Environment. This way, we try to complete the circuit which is essential for any host present in a system to learn and grow. Maybe life on earth formed only because of the periodicity of the revolution of the earth around the Sun, and its revolution about itself. Circadian rythms and sleep cycles would never form if the earth were stationary about its orbit. Basically, the Environment in which an agent is present is crucial for its development. Thus we model the Environment in addition to the Agent.
+ 1. Kobe tries to create a non-ideal model of the brain as opposed to a completely ideal biophysical model. In Kobe, we consider a node as a point neuron and modelling of intraneuronal dynamics, though possible, is discouraged. This is explained in more detail in the next section.
+ 2. A Network in Kobe is actually an OpenAI Gym Agent, which is present in an Environment. This way, we try to complete the circuit which is essential for any host present in a system to learn and grow. Maybe life on earth formed only because of the periodicity of the revolution of the earth around the Sun, and its revolution about itself. Circadian rythms and sleep cycles would never form if the earth were stationary about its orbit. Basically, the Environment in which an agent is present is crucial for its development. Thus we model the Environment in addition to the Agent.
    
  The working of the human brain ( and other mammals alike ) is so elusive that it has prompted many governments across the world to start initiatives, which aim at ( more or less ) broadening our understanding of it. The Human Brain Project, BRAIN initiative are some of the largest and the most prominent ones.
  
