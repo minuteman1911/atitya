@@ -42,7 +42,7 @@
  1. Kobe tries to create a non-ideal model of the brain as opposed to a completely ideal biophysical model. In Kobe, we consider a node as a point neuron and modelling of intraneuronal dynamics, though possible, is discouraged. This is explained in more detail in the next section.
  2. A Network in Kobe is actually an OpenAI Gym Agent, which is present in an Environment. This way, we try to complete the circuit which is essential for any host present in a system to learn and grow. Maybe life on earth formed only because of the periodicity of the revolution of the earth around the Sun, and its revolution about itself. Circadian rythms and sleep cycles would never form if the earth were stationary about its orbit. Basically, the Environment in which an agent is present is crucial for its development. Thus we model the Environment in addition to the Agent.
    
- The working of the human brain ( and other mammals alike ) is so elusive that it has prompted many governments across the world to start initiatives, which aim at ( more or less ) broadening our understanding of it. The Human Brain Project, BRAIN initiative are some of the largest and the most prominent ones.
+ The working of the human brain ( and other mammals alike ) is so elusive that it has prompted many governments across the world to start initiatives, which aim at broadening our understanding of it. The Human Brain Project, BRAIN initiative are some of the largest and the most prominent ones.
  
  
 # Do we need to simulate everything?
@@ -200,3 +200,10 @@ In the following sub-sections, we shall dive into the structural and functional 
    2. There is a dirty LRU cache hack in which the functools library is modified to achieve the desired result. But this modification is in python. Thus the C implementation of functools (which is a lot faster) cannot be used.
    3. The whole worker program can be made in a closer to hardware language like C or C++, but this would require converting or exporting the Node.py code into the same language.
    4. Prevent immediate and individiual writes to database, make them buffered.
+
+[Page 2 : Example code walkthrough](code_walkthrough.md)
+
+# References
+
+
+
