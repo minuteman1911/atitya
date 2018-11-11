@@ -1,5 +1,3 @@
-# The Network object is topmost in the hierarchy of the computation which happens in Kobe
-
 import copy
 import pdb
 import json
@@ -7,15 +5,12 @@ import redis
 import pickle
 import logging
 import time
+import hashlib
+import os
 from kobe.utils import *
 from kobe.core.ensemble import Ensemble
 
 class Network(object):
-	"""
-	Short Long term plasticity 
-	Homeostatic plasticity : returning to a previous set point
-	Reward based learning
-	"""
 	def __init__(self,network_name,db_url):
 		self.network_name = network_name
 		self.network_graph = { 'root' : [] }
@@ -40,14 +35,19 @@ class Network(object):
 				
 	
 	def getEnsemble(self,name):
-		return self.ensemble_map[name]
+		if name in self.ensemble_map:
+			return self.ensemble_map[name]
+		else:
+			self.logger.error('Ensemble ' + name + ' does not exist')
+			return None
 	
 	def addSensor(self,sensor):
 		self.sensors.append(sensor)
 	
 	def addActuator(self,actuator):
 		self.actuators.append(actuator)
-	
+
+
 	def loadNetwork(self):
 		"""
 			This name is a misnomer - This function only pulls the network information from redis-server,
@@ -77,6 +77,27 @@ class Network(object):
 			self.network_graph[k] = []			
 		self.execution_order = self._topological_sort(self.network_graph)
 	
+	def update_node_object_file(self,filename):
+		"""
+			Function to update and send the node object file to all remote hosts with running workers
+		"""
+                
+		if os.path.exists(filename):
+			curr_hash = hashlib.md5(open(filename,'rb').read()).hexdigest()
+		else:
+			self.logger.info('Node object file ' + filename + ' does not exist' )
+			self.logger.info('Try giving the full path')
+			return None
+		reg_hash = self.rconn.get(self.network_id + '_node_file_hash')
+                
+		if curr_hash != reg_hash:
+			with open(filename,'rb') as nfile:
+				blob = nfile.read()
+			self.rconn.set(self.network_id + '_node_file',blob)
+			self.rconn.hset(self.network_name ,'node_file_hash',curr_hash)
+
+		return curr_hash
+
 	def deleteNetwork(self,name):
 		"""
 			The name is pretty much self-explanatory
@@ -88,8 +109,8 @@ class Network(object):
 		"""
 			Dumps the whole network including the weights and the config as a string on a file.
 			This is a heavy operation and could take a long time in case of very large networks.
-			Primarily of this is debug and backup, the network is also saved by Redis itself,
-			where redis-server resides. 
+			Primary use of this is debug and backup, the network is also saved by redis-server itself 
+                        where it resides. 
 		"""
 		fp = open(file,'w')
 		def pprint(*args):
@@ -244,7 +265,7 @@ class Network(object):
 		for row in nodes:
 			pipe.hmget(self.network_id + '_nodes',row)
 		result = pipe.execute()
-		pdb.set_trace()
+		#pdb.set_trace()
 		mapping = {}
 		for row1,row2,row3 in zip(nodes,result,data):
 			for node,nodestring,value in zip(row1,row2,row3):
@@ -271,7 +292,7 @@ class Network(object):
 		outputs = {}
 		t = self.simulation_time
 		ept1 = time.time()
-		pdb.set_trace()	
+		#pdb.set_trace()	
 		self.logger.info('Polling inputs from sensors')
 			
 		for s in self.sensors:

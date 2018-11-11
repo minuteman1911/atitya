@@ -43,7 +43,7 @@ def render_heatmap(axis,**kwargs):
     return None
 
 def render_image(axis,**kwargs):
-	axis.imshow(kwargs['new_data'])
+	axis.imshow(X=kwargs['new_data']['image'])
 
 def image_plot():
 	plt = Plt(func_update=render_image)

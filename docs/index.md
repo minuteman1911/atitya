@@ -93,6 +93,7 @@
   
   A simulation in Kobe is based primarily on a computational or functional aspect, rather than the biophysical aspect. Meaning, Kobe does not try to model an ideal neuron and an ideal biophysically plausible network of neurons. Infact, doing do may be counterproductive, inefficient and a waste of computing power. This is a very dangerous assumption that the whole idea of Kobe rests on; if at any point in time, it is proved that an ideal simulation is necessary for generating a complete simulation of emergent behaviour, Kobe would be obsolete. Proving one would require disproving the other, another purpose for Kobe to exist. Ironically, Kobe could lead to its own peril.
         
+
 # Software Architecture
   Kobe has the following top-level structural components:
   ### 1. Database

@@ -1,0 +1,195 @@
+
+---
+# Must contain variables['network'], all variables go under the dict 'variables'
+name:
+  test_network1
+variables:
+# neuron parameters
+- &input_cell
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] , 
+    'threshold' : [0.4 , 0.55 ] , 
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5], 
+    'ctype' : 'input_cell'
+    }
+   
+- &on_bipolar_cell 
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] , 
+    'threshold' : [0.4 , 0.55 ] , 
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5], 
+    'ctype' : 'on_bipolar_cell'
+    }
+
+- &off_bipolar_cell 
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] , 
+    'threshold' : [0.4 , 0.55 ] , 
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5], 
+    'ctype' : 'off_bipolar_cell'
+    }
+
+- &retinal_ganglion_cell 
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] , 
+    'threshold' : [0.4 , 0.55 ] , 
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5], 
+    'ctype' : 'retinal_ganglion_cell'
+    }
+    
+- &inh_horizontal_cell 
+    {
+    'type' : 0 , 
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'inh_horizontal_cell'
+    }
+    
+- &inh_amacrine_cell 
+    {
+    'type' : 0 , 
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ] ,
+    'decay_time_constant' : [ 10e-3 , 20e-3  ] ,
+    'std_time_constant' : [1e-3,2e-3] , 
+    'stdp_A_minus' : [50e-3,80e-3] ,
+    'stdp_A_plus' : [1,1] , 
+    'stdp_T_minus'  : [50e-3,80e-3] ,
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3,1.5] , 
+    'input_scaling_factor' : [4,5] ,
+    'ctype' : 'inh_amacrine_cell'
+    }
+
+
+# synapse_parameters
+
+- &stdp_synapse
+  {'initial_weight' : [ 0 , 1]}
+
+
+# relative receptive fields
+
+-  &ipLF 0.2    # input layer cell's receptive field
+-  &ihLF 0.2    # inhibitory horizontal cell's field
+-  &biLF 0.35   # excitatory bipolar cell's field
+-  &iamL2F 0.4  # inhibitory amacrine cell's receptive field
+-  &rgcL2F 0.4  # ganglion cell's receptive field
+
+
+# layers
+
+
+- &retinal_input_layer # input cells with laterally inhibiting horizontal cell
+  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
+  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
+  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
+  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
+  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
+
+- &retinal_horizontal_layer
+  - [[ *inh_horizontal_cell ,[[-1,*ihLF,*stdp_synapse]]]]
+
+
+- &retinal_bipolar_layer # bipolar cells polling inputs from multiple input cells (cones)
+  - [[ *on_bipolar_cell ,[[-1,*biLF,*stdp_synapse]]]]
+
+- &retinal_amacrine_layer  # feed back (-1), lateral (0) and feed forward (1) inhibiting amacrine cell
+  - [[ *inh_amacrine_cell ,[[-1,*iamL2F,*stdp_synapse],[0,*iamL2F,*stdp_synapse],[1,*iamL2F,*stdp_synapse]]]]
+
+- &retinal_ganglion_layer  # ganglion cells connected to amacrine cells (-1)
+  - [[ *retinal_ganglion_cell ,[[-1,*rgcL2F,*stdp_synapse]] ]]
+
+
+# column
+
+- &retinal_functional_column
+  - *retinal_input_layer
+  - *retinal_horizontal_layer
+  - *retinal_bipolar_layer
+  - *retinal_amacrine_layer
+  - *retinal_ganglion_layer
+
+
+# ensembles
+retina:
+  - [*retinal_functional_column,[10,10]]
+
+
+# The network object
+ 
+network:
+  root:
+    - [ retina , { 'connect_method' : default , 'delay' : 1 , 'neuromodulation_factor_init' : 1 } ]
+
+...

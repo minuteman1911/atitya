@@ -6,7 +6,7 @@ import gzip
 from collections import namedtuple
 import pickle
 import pdb
-from third_party.tensorflow.cnn_mnist import cnn_model_fn
+from .cnn_mnist import cnn_model_fn
 from mnist import MNIST
 
 

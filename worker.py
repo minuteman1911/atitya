@@ -6,11 +6,15 @@ import redis
 import jsonpickle
 import signal
 import logging
+import hashlib
 import logging.handlers
 import pickle
 import time
-from kobe.utils import *
-from kobe import getKobeLogger
+import sys
+sys.path.append('..')
+from utils import *
+from kobe import getKobeLogger , Node
+
 #try:
 #    #import kobe.utils
 #except ModuleNotFoundError as e:
@@ -125,6 +129,34 @@ def main(argv):
 		sys.exit(1)
 	network_id = ret.decode('UTF-8')
 	logger.info('network_id : %s',network_id )
+	if not os.path.exists('shared'):
+		logger.info('Creating shared folder')
+		os.mkdir('shared')
+	logger.info('Downloading node object file')
+	node_filepath = os.path.join('shared','node.py')
+	node_file_hash = rconn.hget(network_name, 'node_file_hash')
+	if os.path.exists(node_filepath):
+		curr_hash = hashlib.md5(open(node_filepath,'rb').read()).hexdigest()
+	else:
+		curr_hash = None	
+	if node_file_hash != curr_hash:
+		logger.info('Node object file has been modified... Updating ...')
+
+	blob = rconn.get(network_id+'_node_file')
+	if not blob:
+		logger.info("Fatal : Node file does not exist on the database, Exiting ...")
+		sys.exit()
+	with open(node_filepath , 'wb') as fp:
+		fp.write(blob)
+
+	try:	
+		from shared.node import Node as newNode
+	except ImportError as e:
+		logger.info('Exception in loading node file : %s' , e)
+		
+
+	Node.process = newNode.process
+
 	num_consumers = multiprocessing.cpu_count() if args.num_workers == None else args.num_workers
 	print('Creating {} consumers'.format(num_consumers))
 	

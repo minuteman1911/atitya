@@ -1,5 +1,11 @@
+import sys
+import os
+cwd = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(cwd + '/../..')
+import pdb
+#pdb.set_trace()
 from kobe import *
-from third_party import *
+from kobe.third_party import *
 import kobe.utils as utils
 import kobe.rendering as plt
 import gzip, pickle

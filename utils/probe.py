@@ -7,9 +7,12 @@ import copy
 
 class ProbeLogger():
 	LOGGING_FORMAT = ""
-	def __init__(self,probe_name,frame_size=3):
+	def __init__(self,probe_filename,probe_name=None,frame_size=3):
 		self.frame_size = frame_size
+		if probe_name == None:
+			probe_name = probe_filename.split('.')[0]
 		self.logger = self._getLogger(probe_name)
+		self.addHandler(logging.FileHandler(probe_filename))
 		self.probes = {}
 	
 	def addHandler(self,handler):

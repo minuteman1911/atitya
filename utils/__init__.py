@@ -1,4 +1,5 @@
 
+from kobe.utils.utils import ProgressBar
 from kobe.utils.utils import randomizeParams
 from kobe.utils.utils import getNewId
 from kobe.utils.utils import Params
@@ -15,4 +16,4 @@ from kobe.utils.probe import ProbeParser
 
 from kobe.utils.networkinterface import Sensor,Actuator
 
-__all__ = ["randomizeParams","getNewId","Params","RedisFIFOQueue","RedisDatastore","ConnectionHandler","Job","ProbeLogger", "ProbeParser" , "Sensor" , "Actuator","item_setter","item_getter","downloadFileFromUrl"]
+__all__ = ["ProgressBar","randomizeParams","getNewId","Params","RedisFIFOQueue","RedisDatastore","ConnectionHandler","Job","ProbeLogger", "ProbeParser" , "Sensor" , "Actuator","item_setter","item_getter","downloadFileFromUrl"]

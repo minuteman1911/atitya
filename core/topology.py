@@ -17,12 +17,12 @@ import pdb
 class Topology():
 	def __init__(self,configpath,db_url='redis://localhost:6379'):
 		self.logger = logging.getLogger(__name__)
-		assert os.path.exists(configpath), "Config path does not exist"
+		assert os.path.exists(configpath), "Config file "+ configpath +" does not exist"
 		yaml=YAML(typ='unsafe')
 		yaml.default_flow_style = True
 		with open(configpath) as fp:
 			config = yaml.load(fp)
-			self.logger.info('Loaded config:%s',str(config))
+			self.logger.info('Loaded config :%s',str(config))
 		
 		self.network_map = {}
 		self.synapse_map = {}
@@ -68,7 +68,7 @@ class Topology():
 			if tuple not in list:
 				list.append(tuple)
 			else:
-				pdb.set_trace()	
+				logger.info("Fatal Error. Contact support if you wanna solve this")
 		pipe = self.db_conn.pipeline()
 		mapping = { idx : obj.dumpToJSON() for idx,obj in self.network_map.items()}
 		pipe.hmset(addr + '_' + 'nodes' ,mapping)
@@ -78,6 +78,7 @@ class Topology():
 		pipe.hmset(addr + '_' + 'ensembles',mapping)
 		mapping = { idx : json.dumps(obj) for idx,obj in self.ensemble_params.items()}
 		pipe.hmset(addr + '_' + 'ensemble_params',mapping)
+		self.logger.info("Storing the generated network in database")		
 		pipe.execute()
 		mapping = {'network_graph' : json.dumps(self.network_graph)  , 'addr' : addr  }
 		self.db_conn.hmset(network_name,mapping)
@@ -95,7 +96,6 @@ class Topology():
 				if parent not in self.network_graph.keys():
 					self.network_graph[parent] = []
 				self.network_graph[parent].append(ensemble_id)
-		#pdb.set_trace()
 		for parent,children in self.network_graph.items():
 			if parent != 'root':
 				for ensemble_id in children:
@@ -179,6 +179,7 @@ class Topology():
 	
 	
 	def _verify_ensemble(self,ensemble_config):
+		self.logger.info("Verifying Ensemble config")
 		retcode = False
 		assert isinstance(ensemble_config,list) , "Ensemble config must be a 1D list of <group,[hmul,vmul]> , where group is repeated hmul and vmul number of times"
 		for item in ensemble_config:
@@ -192,8 +193,6 @@ class Topology():
 					assert isinstance(row,list) , "Each row in a layer must a list"
 					for column in row:
 						assert isinstance(column,list) , "Each column in a row must a list of node_params"
-						
-						#pdb.set_trace()
 						assert len(column) == 2, "Each element in a row of a layer must be of length , and of the form <node_params,synapse_config>" + str(ensemble_config)
 						node_params = column[0]
 						synapse_params = column[1]
@@ -226,35 +225,37 @@ class Topology():
 			ensemble = []
 			#if topology_object.verify(ensemble_config) == False:
 			#	return
+			self.logger.info("Generating nodes")
 			for tuple in ensemble_config:
 				group = tuple[0]
 				x_span = tuple[1][0]
 				y_span = tuple[1][1]
 				n = len(group)
+				pbar = ProgressBar(total=y_span*sum([ x_span*len(i) for l in group for i in l ]) , display_percentage=True )
 				for l in range(n):
+					
 					layer = []
 					m = len(group[l])
 					for j in range( y_span * m ):
-							layer.append(list())
-							#pdb.set_trace()
-							#print j
-							p = len(group[l][j%m])
-							for i in range(x_span * p ):
-									neuron_params = group[l][j%m][i%p][0]
-									#pdb.set_trace()
-									id = self.addNewNode(ensemble_id,neuron_params)
-									
-									layer[j].append(id)
-									
+						
+						layer.append(list())
+						p = len(group[l][j%m])
+						for i in range(x_span * p ):
+							pbar.update()	
+							neuron_params = group[l][j%m][i%p][0]
+							idx = self.addNewNode(ensemble_id,neuron_params)	
+							layer[j].append(idx)		
 					ensemble.append(layer)
+				pbar.close()
 			return ensemble
 		except Exception as e:
-			pdb.set_trace()
-			print(e)
+			self.logger.info("Exception in making nodes : %s" , e)
 		
 		
 	def initConnections(self,ensemble_config,ensemble):
 		try:
+			self.logger.info("Making synapses. This might take a long time depending on the size of the network." )
+			pbar = ProgressBar()
 			for ilayer in range(len(ensemble)):
 				mx,my = len(ensemble[ilayer][0]),len(ensemble[ilayer])
 				slice=self.getSlice(ilayer,ensemble_config)
@@ -262,25 +263,23 @@ class Topology():
 				for irow in range(len(ensemble[ilayer])):
 					s_slice_row = len(slice[irow%s_slice])
 					for inode in range(len( ensemble[ilayer][irow])):
+						
 						n = ensemble[ilayer][irow][inode]
 						synapse_config = slice[irow%s_slice][inode%s_slice_row]
-						for tuple in synapse_config[1]:
-							if tuple:
-								iprev_layer = ilayer + tuple[0]
+						for info_tuple in synapse_config[1]:
+							if info_tuple:
+								iprev_layer = ilayer + info_tuple[0]
 								if iprev_layer >= 0 and iprev_layer < len(ensemble) :
-									#pdb.set_trace()
 									nx,ny = len(ensemble[iprev_layer][0]),len(ensemble[iprev_layer])
 									pos_matrix = self.getCoordinates(my,ny,mx,nx)
-									srow,scol=self.getReceptiveField(tuple[1],nx,ny)
+									srow,scol=self.getReceptiveField(info_tuple[1],nx,ny)
 									input_space_nodes = self.getConnList(pos_matrix[irow][inode],float(scol)/2,float(srow)/2,ensemble[iprev_layer])
-									synapse_params  = tuple[2]
+									synapse_params  = info_tuple[2]
+									pbar.update()
 									self.connectInputNodes(input_space_nodes,n,synapse_params)
-									#pdb.set_trace()
-									#print(ilayer)
-									
+			pbar.close()			
 		except Exception as e:
-			pdb.set_trace()
-			print(e)
+			self.logger.info("Exception in making connections %s" , e)
 									
 	def getVector(self , m , n):
 		if m == n:
@@ -292,7 +291,6 @@ class Topology():
 	def getCoordinates(self,mx,nx,my,ny):
 		xlist = self.getVector(mx,nx)
 		ylist = self.getVector(my,ny)
-		#pdb.set_trace()
 		matrix = []
 		for xpos in xlist:
 			matrix.append([(xpos,ypos) for ypos in ylist])
@@ -306,10 +304,6 @@ class Topology():
 			y = pos[1]
 			n = len(prev_layer)
 			m = len(prev_layer[0])
-			#for i in xrange(max(int(math.floor(x-sx)),0),min(int(math.ceil(x+sx)),n)): 
-			#	for j in xrange(max(int(math.floor(y-sy)),0),min(int(math.ceil(y+sy)),m)):
-			#		connlist.append(prev_layer[i][j])
-			#pdb.set_trace()
 			for j in range(len(prev_layer)):
 				for i in range(len(prev_layer[j])):
 					if ( i >= y - sy and i <= y + sy ) and ( j >= x - sx and j <= x + sx ) :  
@@ -322,4 +316,4 @@ class Topology():
 			
 			return connlist
 		except Exception as e:
-			pdb.set_trace()
+			self.logger.info("Exception in getting connection list : %s" ,e)

@@ -1,10 +1,10 @@
 
-from third_party.gym.slate_env import SlateEnv , split_num
+from kobe.third_party.gym.slate_env import SlateEnv , split_num
 import numpy as np
 import cv2
 from gym import Env
 import pdb
-from third_party.tensorflow.mnist_classifier import MNISTClassifier
+from kobe.third_party.tensorflow.mnist_classifier import MNISTClassifier
 
 class SimpleArithmeticEnv(SlateEnv):
 	def __init__(self,i_resolution,slate_resolution,char2img_map,mn_object,operator,threshold_probability,time_step=1,cursor_size=2):

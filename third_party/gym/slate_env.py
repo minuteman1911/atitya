@@ -8,7 +8,7 @@ from six import StringIO
 import sys
 import math
 from random import choice 
-from kobe.rendering.plots import image_plot
+from ...rendering.plots import image_plot
 #from gym.envs.classic_control import rendering
 import pdb
 
@@ -119,7 +119,7 @@ class SlateEnv(Env):
 	def time_limit(self):
 		"""If an agent takes more than this many timesteps, end the episode
 		immediately and return a negative reward."""
-		# (Seemingly arbitrary)
+
 		return 200
 	
 	def set_cursor_size(self,size):
@@ -175,7 +175,7 @@ class SlateEnv(Env):
 		return [seed]
 
 	def render_observation(self):
-		arr1 = np.array(np.dot(255,self.input_data),dtype=np.uint8)
+		arr1 = np.array(np.dot(255,self.input_data),dtype=np.float32)
 		x,y = arr1.shape
 		arr2 = self.render_i_frame(arr1.shape)
 		arr = np.concatenate((arr1.reshape(x,y,1),arr1.reshape(x,y,1),arr2.reshape(x,y,1)),axis=2)
@@ -227,8 +227,7 @@ class SlateEnv(Env):
 				self.observation_viewer = image_plot()
 				#self.observation_viewer = rendering.SimpleImageViewer()
 				#self.action_viewer = rendering.SimpleImageViewer()
-			pdb.set_trace()
-			self.observation_viewer.update(new_data=obs)			
+			self.observation_viewer.update(image=obs)			
 			#self.observation_viewer.imshow(obs)
 			#self.action_viewer.imshow(act)
 	
@@ -242,7 +241,6 @@ class SlateEnv(Env):
 			i_movement = action['i_movement']
 			write_flag = action['write_flag']
 			cursor_movement = action['cursor_movement']
-			#pdb.set_trace()
 			self.write_head.move(cursor_movement)
 			print (self.write_head)
 			if write_flag == 1:
@@ -264,7 +262,6 @@ class SlateEnv(Env):
 		s = self._cursor_size
 		d = self.input_data
 		ixgrid = np.ix_(range( max( 0 , x-int((s-1)/2) ), min( d.shape[0], x+int(s/2)) ),range( max( 0 , y-int((s-1)/2) ), min( d.shape[1] , y+int(s/2) ) ) )
-		#pdb.set_trace()
 		assert (len(ixgrid[0]),len(ixgrid[1][0])) == self.cursor.shape
 		for x,m in zip(ixgrid[0],self.cursor): 
 			for y in ixgrid[1]:
@@ -273,7 +270,6 @@ class SlateEnv(Env):
 		
 		
 		#self.input_data[ixgrid] = 1
-		#pdb.set_trace()
 	
 	def check_reward(self,cursor_movement):
 		raise NotImplementedError("Subclasses must implement")
@@ -289,7 +285,6 @@ class SlateEnv(Env):
 		hmargin_shape = (int(max_size*char_shape[1]/10),max_size*(char_shape[1]+int(char_shape[0]/10))+int(char_shape[0]/10))
 		vmargin = np.zeros(shape=vmargin_shape,dtype=np.uint8)
 		hmargin = np.zeros(shape=hmargin_shape,dtype=np.uint8)
-		#pdb.set_trace()
 		image_grid = np.copy(hmargin)
 		for num in string.split('\n'):
 			image_tape = np.array(vmargin)

@@ -9,6 +9,8 @@ logging.lastResort.setLevel(logging.INFO)
 
 from kobe.utils import *
 
+from kobe.third_party import *
+
 def getKobeLogger():
 	return logging.getLogger(__name__)
 

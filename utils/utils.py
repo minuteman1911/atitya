@@ -7,6 +7,7 @@ import pickle
 import random
 import requests
 import json
+import sys
 import time
 import os
 import numpy as np
@@ -17,7 +18,25 @@ PER_PROCESS_CACHE_SIZE = 512
 
 logger = logging.getLogger(__name__)
 
+class ProgressBar():
+	def __init__(self,total=100,display_percentage=False):
+		self.total = total
+		self.display_percentage = display_percentage
+		self.i = 0
 
+	def update(self):
+		self.i += 1
+		if self.i > self.total:	self.i = 0		
+		sys.stdout.write('\r')
+		p = float(self.i / self.total) * 100
+		if self.display_percentage == True:
+			sys.stdout.write( "[%-100s] %f%% " %  ('='* int(p) , p ) )
+		else:
+			sys.stdout.write( "[%-100s] " %  ('='* int(p) ) )
+		sys.stdout.flush()
+	
+	def close(self):
+		sys.stdout.write('\n')    
 
 def item_getter(object,*args):
 	res = object
