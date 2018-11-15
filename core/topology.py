@@ -29,16 +29,15 @@ class Topology():
 		self.network_graph = {}
 		self.ensemble_map = {}
 		self.ensemble_params = {}
-		network_name = config['name']
-		self.network_name = network_name
+		self.network_name = config['name']
 		try:
 			self.db_conn = redis.StrictRedis.from_url(db_url)
 		except Exception as e:
 			self.logger.error('Unable to connect to redis, %s',e)
 		self.db_url = db_url
 		addr = hashlib.md5(pickle.dumps(config)).hexdigest()
-		if self.db_conn.exists(network_name):
-			if self.db_conn.hmget(network_name,'addr')[0].decode('UTF-8') != addr:
+		if self.db_conn.exists(self.network_name):
+			if self.db_conn.hmget(self.network_name,'addr')[0].decode('UTF-8') != addr:
 				ip = None
 				while ip not in ('y','n'):
 					ip = input('Config has changed. Re-build the network? [y/n]\n').strip().lower()
@@ -56,10 +55,10 @@ class Topology():
 			self.config = config
 			self.logger.info('Building network')
 			self.init(config)
-			self.addr = self.commitToDB(network_name)
+			self.addr = self.commitToDB()
 			self.initialized = True
 	
-	def commitToDB(self,network_name):
+	def commitToDB(self):
 		ret = None
 		addr = hashlib.md5(pickle.dumps(self.config)).hexdigest()
 		list = []
@@ -81,7 +80,7 @@ class Topology():
 		self.logger.info("Storing the generated network in database")		
 		pipe.execute()
 		mapping = {'network_graph' : json.dumps(self.network_graph)  , 'addr' : addr  }
-		self.db_conn.hmset(network_name,mapping)
+		self.db_conn.hmset(self.network_name,mapping)
 		ret = addr
 		return ret 
 	
@@ -96,16 +95,27 @@ class Topology():
 				if parent not in self.network_graph.keys():
 					self.network_graph[parent] = []
 				self.network_graph[parent].append(ensemble_id)
-		for parent,children in self.network_graph.items():
-			if parent != 'root':
-				for ensemble_id in children:
-					conf = self.config[ensemble_id]
-					self.connectEnsembles(parent,ensemble_id,conf)
+		pdb.set_trace()
+		if 'conn_en_en' not in config.keys():		
+			for parent,children in self.network_graph.items():
+				if parent != 'root':
+					for ensemble_id in children:
+						conf = self.config[ensemble_id]
+						self.connectEnsembles(parent,-1,ensemble_id,0,conf)
 	
+		else:
+			for conn_specs in config['conn_en_en']:
+				_from = self.ensemble_map[conn_specs[0][0]]
+				_from_layer = conn_specs[0][1]
+				_to = self.ensemble_map[conn_specs[1][0]]
+				_to_layer = conn_specs[1][1]
+				self.connectLayers(_from,_from_layer,_to,_to_layer,self.config[conn_specs[1][0]])
+
 	def connectEnsembles(self,source_m,dest_m,dest_ensemble_config):
 		#layer1 = self.ensemble_map[source_m][-1]
 		layer2 = self.ensemble_map[dest_m][0]
 		self.connectLayers(self.ensemble_map[source_m],layer2,dest_ensemble_config)
+	
 	
 	def connectLayers(self,prev_ensemble,layer2,dest_ensemble_config):
 		#pdb.set_trace()
@@ -160,7 +170,7 @@ class Topology():
 		retcode = False
 		assert 'network' in config , "Key required : network"
 		#pdb.set_trace()
-		assert 'root' in config['network'] , "Require a key by name root in the network dict"
+		assert 'root' in config['network'] , "Require a key by name root in the network dict"		
 		for p,clist in config['network'].items():
 			assert isinstance(p,str) , "Expected a string, found" + str(type(p))
 			if p != 'root':
@@ -170,10 +180,19 @@ class Topology():
 				assert len(i) == 2, "Require two elements per child node, the name of the node , and the extra parameters"
 				assert isinstance(i[0],str) , "Expected a string, found" + str(type(i[0]))
 				assert i[0] in config.keys() , "No configuration found for ensemble: " + i[0]
+								
 				#assert i[1] in self.connect_methods , "connect method is not defined or does not exist in this Topology object"
 				if i[0] not in done:
 					if self._verify_ensemble(config[i[0]]):
 						done.append(i)
+		
+		assert 'conn_en_en' in config.keys() , "Key required : conn_en_en"
+		for i in config['conn_en_en']:
+			assert len(i) == 2 and len(i[0]) == 2 and len(i[1]) == 2, "Require only two elements in the outer array, and two in the inner one,\n in the form [[<source_ensemble>,<source_layer>],[<dest_ensemble>,<dest_layer>]]"			
+			assert i[0][0] in config.keys(), "No ensemble of name " + i[0][0] + " exists in the config"
+			assert i[1][0] in config.keys(), "No ensemble of name " + i[1][0] + " exists in the config"
+			assert i[0][1] <= len(config[i[0][0]]), "Layer " + str(i[0][1]) + " does not exist in ensemble " + i[0][0]  
+			assert i[1][1] <= len(config[i[1][0]]), "Layer " + str(i[1][1]) + " does not exist in ensemble " + i[1][0]		
 		retcode = True			
 		return retcode
 	

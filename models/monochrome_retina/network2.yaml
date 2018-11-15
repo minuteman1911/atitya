@@ -132,6 +132,27 @@ variables:
     }
 
 
+- &exc_lgn_neuron
+    {
+    'type' : 0 ,
+    'tpsp' : 0,
+    'output' : False,
+    'membrane_potential' : 0,
+    'receptive_field' : 0.1 ,
+    'absolute_refractory_period' : [ 2e-3 , 4e-3 ],
+    'decay_time_constant' : [ 10e-3 , 20e-3  ],
+    'std_time_constant' : [1e-3,2e-3],
+    'stdp_A_minus' : [50e-3,80e-3],
+    'stdp_A_plus' : [1,1],
+    'stdp_T_minus'  : [50e-3 , 80e-3],
+    'stdp_T_plus' : [20e-3,40e-3] ,
+    'utilization_factor' : [0.2,0.3] ,
+    'threshold' : [0.4 , 0.55 ] ,
+    'p_constant' : [ 1.3 , 1.5] ,
+    'input_scaling_factor' : [4,5],
+    'ctype' : 'input_cell'
+    }
+
 # synapse_parameters
 
 - &stdp_synapse
@@ -150,40 +171,56 @@ variables:
 # layers
 
 
-- &retinal_input_layer # input cells with laterally inhibiting horizontal cell
-  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
-  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
-  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
-  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
-  - [[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ,[ *input_cell ,[] ] ]
-
-- &retinal_horizontal_layer
-  - [[ *inh_horizontal_cell ,[[-1,*ihLF,*stdp_synapse]]]]
+- &retinal_input_sublayer # input cells with laterally inhibiting horizontal cell
+  - [[ *input_cell ,[] ]]
 
 
-- &retinal_bipolar_layer # bipolar cells polling inputs from multiple input cells (cones)
-  - [[ *on_bipolar_cell ,[[-1,*biLF,*stdp_synapse]]]]
-
-- &retinal_amacrine_layer  # feed back (-1), lateral (0) and feed forward (1) inhibiting amacrine cell
-  - [[ *inh_amacrine_cell ,[[-1,*iamL2F,*stdp_synapse],[0,*iamL2F,*stdp_synapse],[1,*iamL2F,*stdp_synapse]]]]
-
-- &retinal_ganglion_layer  # ganglion cells connected to amacrine cells (-1)
-  - [[ *retinal_ganglion_cell ,[[-1,*rgcL2F,*stdp_synapse]] ]]
+- &retinal_horizontal_sublayer
+  - [[ *inh_horizontal_cell ,[[ -1 , *ihLF , *stdp_synapse ]]]]
 
 
-# column
+- &retinal_bipolar_sublayer # bipolar cells taking inputs from multiple input cells (rods & cones)
+  - [[ *on_bipolar_cell , [[ -2 , *biLF , *stdp_synapse ]]]]
+
+- &retinal_amacrine_sublayer  # feed back (-1), lateral (0) and feed forward (1) inhibiting amacrine cell
+  - [[ *inh_amacrine_cell ,[[-1, *iamL2F , *stdp_synapse ], [ 0 , *iamL2F , *stdp_synapse ], [ 1 , *iamL2F , *stdp_synapse ]]]]
+
+- &retinal_ganglion_sublayer  # ganglion cells connected to amacrine cells (-1)
+  - [[ *retinal_ganglion_cell , [[ -1 , *rgcL2F , *stdp_synapse ]] ]]
+
+- &lgn_sublayer
+  - [[ *exc_lgn_neuron , [[ -1 , *rgcL2F , *stdp_synapse ]] ]]
+
+
+# functional columns/groups
+
+
+- &retinal_input_group
+  - *retinal_input_sublayer
 
 - &retinal_functional_column
-  - *retinal_input_layer
-  - *retinal_horizontal_layer
-  - *retinal_bipolar_layer
-  - *retinal_amacrine_layer
-  - *retinal_ganglion_layer
+  - *retinal_horizontal_sublayer
+  - *retinal_bipolar_sublayer
+  - *retinal_amacrine_sublayer
+  - *retinal_ganglion_sublayer
+
+- &lgn_group
+  - *lgn_sublayer
 
 
 # ensembles
 retina:
+  - [*retinal_input_group,[20,20]]
   - [*retinal_functional_column,[10,10]]
+
+lgn:
+
+  - [*lgn_group,[10,10]]
+
+# inter-ensemble connections
+
+conn_en_en:
+  - [ [retina,4 ], [lgn,0] ]
 
 
 # The network object
@@ -191,5 +228,7 @@ retina:
 network:
   root:
     - [ retina , { 'connect_method' : default , 'delay' : 1 , 'neuromodulation_factor_init' : 1 } ]
+  retina:
+    - [ lgn    , { 'connect_method' : default , 'delay' : 1 , 'neuromodulation_factor_init' : 1 } ]
 
 ...
