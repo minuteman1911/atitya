@@ -2,16 +2,10 @@
 
   Please follow the steps given in the README.md file to install Kobe
 
-# What Kobe is
+# What is Kobe
   Kobe is an open source simulation tool written in Python which can model artificial spiking neural networks, along with its environment ( using OpenAI Gym ), with more focus on the computational or funcional aspect rather than the biophysical one.
     **It is still largely meant for research and has no practical purpose as of now.**
 
-# What Kobe isn't !
-  Kobe is not a traditional machine learning framework which we normally use for classification, regression, image recognition or natural language processing tasks. For all the above tasks, there already are amazing libraries out there like scikit-learn, Tensorflow, Theano etc.
-    
-# When you should NOT use Kobe
-   If you are solving a typical Classification/Regression or Clustering problem, then you should use the appropriate tool rather Kobe.
-    
 # Key features of Kobe
    The key features of Kobe are:
    1. Possible to place nodes (neurons) according to a layered topology (as found in the biological neocortex) with a NeuroML like YAML file.
@@ -48,6 +42,7 @@
 # Do we need to simulate everything?
  This section (and maybe some of the subsequent ones) is biased towards my own personal views about computation and simulation; the reader should know better. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
  One goal of Kobe is to find the break-even point of the detail below which a simulation would make no sense, and produce garbled output, and beyond which, is a plain waste of computing resources. 
+ ![computation power](./images/img1.svg)
  There are multiple factors at play at once on multiple levels in the brain. Below is a table, detailing the phenomena simulated in Kobe.
   #### Morphology 
   Name                           | Present in Kobe 
