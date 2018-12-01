@@ -5,16 +5,10 @@
 # What is Kobe
   Kobe is an open source simulation tool written in Python which can model artificial spiking neural networks, along with its environment ( using OpenAI Gym ), with more focus on the computational or funcional aspect rather than the biophysical one.
     **It is still largely meant for research and has no practical purpose as of now.**
-
-# Key features of Kobe
-   The key features of Kobe are:
-   1. Possible to place nodes (neurons) according to a layered topology (as found in the biological neocortex) with a NeuroML like YAML file.
-   2. Supports macro-scale (spanning a large population of neurons) neuromodulation or homeostatis.
-   3. Possible to generate a large number of intra-layer and inter-layer connections.
     
 # TL;DR 
    I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image processing, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
-   ### The future of AI
+   ### 
    Most people today implement a technique called ML (Machine Learning) to make their applications smarter. Although ML has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing power increased manifold in the last two decades. AI is actually a broader term which may be vaguely summed up as a solution to the problem : "Do anything but make my machine seem intelligent!". Thus, a very complex system of hardcoded rules, interdependent on each other could make up a good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest advancement of ANNs employed in an AI system) and the biological brain. 
     Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot; that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the learning rules in the artificial neural network are different from those that of the biological counterpart.
     Can today's AI make a machine possible of exhibiting conscious thought? Unlikely.
@@ -26,6 +20,8 @@
 # Other similar projects
  There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have described the major ones in short.
  
+ NEST is a very powerful simulator with the capability to create large scale biologically realistic networks of neurons.
+ 
  BRIAN is an open source Python package for simulating spiking neurons. It offers flexibility by giving users the option of writing their own model of neurons, and then converting it to a language closer to hardware for faster execution.
  
  GENESIS is a software which can simulate large scale networks, like the neocortex.
@@ -33,16 +29,16 @@
  NEURON is similar to GENESIS and comes with a GUI builder for creating networks easily. Also useful for modelling an individual neuron.
  
  ## Some key differences between these projects and Kobe are:
- 1. Kobe tries to create a non-ideal model of the brain as opposed to a completely ideal biophysical model. In Kobe, we consider a node as a point neuron and modelling of intraneuronal dynamics, though possible, is discouraged. This is explained in more detail in the next section.
- 2. A Network in Kobe is actually an OpenAI Gym Agent, which is present in an Environment. This way, we try to complete the circuit which is essential for any host present in a system to learn and grow. Maybe life on earth formed only because of the periodicity of the revolution of the earth around the Sun, and its revolution about itself. Circadian rythms and sleep cycles would never form if the earth were stationary about its orbit. Basically, the Environment in which an agent is present is crucial for its development. Thus we model the Environment in addition to the Agent.
-   
- The working of the human brain ( and other mammals alike ) is so elusive that it has prompted many governments across the world to start initiatives, which aim at broadening our understanding of it. The Human Brain Project, BRAIN initiative are some of the largest and the most prominent ones.
- 
+ 1. The process of creating a network is made very easy in Kobe. You need to only create a single file for defining the whole network.
+ 2. Kobe tries to create a non-ideal model of the brain as opposed to a completely ideal biophysical model. In Kobe, we consider a node as a point neuron and modelling of intraneuronal dynamics, though possible, is discouraged. This is explained in more detail in the next section.
+ 3. A Network in Kobe is actually an OpenAI Gym Agent, which is present in an Environment. This way, we try to complete the circuit which is essential for any host present in a system to learn and grow. Maybe life on earth formed only because of the periodicity of the revolution of the earth around the Sun, and its revolution about itself. Circadian rythms and sleep cycles would never form if the earth were stationary about its orbit. Basically, the Environment in which an agent is present is crucial for its development. Thus we model the Environment in addition to the Agent.
+ 4. Although differential equations are beautiful, they are discouraged. Instead, an optimized heuristic can used for achieving the same results.
  
 # Do we need to simulate everything?
- This section (and maybe some of the subsequent ones) is biased towards my own personal views about computation and simulation; the reader should know better. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
- One goal of Kobe is to find the break-even point of the detail below which a simulation would make no sense, and produce garbled output, and beyond which, is a plain waste of computing resources. 
+ This section might be a little biased towards my own views about computation and simulation. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
+ One goal of Kobe is to find the minimum level of detail required to generate a plausible simulation. 
  ![computation power](./images/img1.svg)
+ Above is an illustration of the approximate computing power required to simulate the whole brain ( around 500 petaflops for 100 billion neurons ). 
  There are multiple factors at play at once on multiple levels in the brain. Below is a table, detailing the phenomena simulated in Kobe.
   #### Morphology 
   Name                           | Present in Kobe 
@@ -125,7 +121,6 @@
   In Kobe, a small group of Nodes are processed in batches. These batches are put on the global queue sequentially, but they are picked up by the workers randomly. Thus, it can very well be considered as random.
  
  
-# Control flow
 
 # Model of the brain
 In the following sub-sections, we shall dive into the structural and functional aspects of the brain 
