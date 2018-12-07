@@ -55,7 +55,7 @@ class Network(object):
 			on the machine where it resides.
 		"""
 		self.logger.info('In loadNetwork, getting saved network configuration')
-		string = self.rconn.hget(self.network_name,'network_graph')
+		string = self.rconn.hget(self.network_name,'network_graph').decode('utf-8')
 		self.network_graph = json.loads(string)
 		self.logger.info('Loaded network: %s', str(self.network_graph))
 		keys = self.network_graph.keys()
@@ -74,7 +74,7 @@ class Network(object):
 					self.ensemble_map[v] = e
 					done.append(v)
 		for k in addkeys:
-			self.network_graph[k] = []			
+			self.network_graph[k] = []
 		self.execution_order = self._topological_sort(self.network_graph)
 	
 	def update_node_object_file(self,filename):
@@ -89,12 +89,13 @@ class Network(object):
 			self.logger.info('Try giving the full path')
 			return None
 		reg_hash = self.rconn.get(self.network_id + '_node_file_hash')
-                
+		if reg_hash:
+			reg_hash = reg_hash.decode('utf-8')
 		if curr_hash != reg_hash:
 			with open(filename,'rb') as nfile:
 				blob = nfile.read()
 			self.rconn.set(self.network_id + '_node_file',blob)
-			self.rconn.hset(self.network_name ,'node_file_hash',curr_hash)
+			self.rconn.hset(self.network_name ,'node_file_hash',curr_hash.encode('utf-8'))
 
 		return curr_hash
 
@@ -125,7 +126,7 @@ class Network(object):
 			pprint('id:'+ndict['id'] + ' axonal_terminals'+ str([ synapse_map[i]['destination'] for i in  ndict['axonal_terminals'] ])   )
 		pprint('Network id: ' + self.network_id)
 		network_config = self.rconn.hmget(self.network_name,'network_graph')
-		pprint('network_graph : ' + str(json.loads(network_config[0])))
+		pprint('network_graph : ' + str(json.loads(network_config[0].decode('utf-8'))))
 		ensembles = self.rconn.hgetall(self.network_id+'_ensembles')
 		for ename,e in ensembles.items():
 			pprint('Ensemble : '+ename.decode('utf-8'))
@@ -269,10 +270,10 @@ class Network(object):
 		mapping = {}
 		for row1,row2,row3 in zip(nodes,result,data):
 			for node,nodestring,value in zip(row1,row2,row3):
-				nodedict = json.loads(nodestring)
+				nodedict = json.loads(nodestring.decode('utf-8'))
 				# Below line passes the value as native python type, instead of numpy dtype
 				item_setter(nodedict,value.item(),*params)
-				mapping[node] = json.dumps(nodedict)
+				mapping[node] = json.dumps(nodedict).encode('utf-8')
 				
 		self.rconn.hmset(self.network_id + '_nodes',mapping)
 	

@@ -18,9 +18,9 @@ class Ensemble(object):
 		self.rconn = rconn
 		self.logger = logging.getLogger(__name__)#logger
 		self.logger.info('Initializing ensemble : %s',str(ensemble_id))
-		estring = self.rconn.hget(network_id+'_ensembles',ensemble_id)
+		estring = self.rconn.hget(network_id+'_ensembles',ensemble_id).decode('utf-8')
 		self.ensemble = json.loads(estring)
-		pstring = self.rconn.hget(network_id+'_ensemble_params',ensemble_id)
+		pstring = self.rconn.hget(network_id+'_ensemble_params',ensemble_id).decode('utf-8')
 		
 		params = json.loads(pstring) if pstring != None else {}
 		self.logger.info('Loaded ensemble : %s , params : %s', str(self.ensemble),str(params))

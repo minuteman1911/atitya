@@ -1,4 +1,4 @@
-from kobe.utils.functools_modified import lru_cache
+from kobe.utils.lru_cache import lru_cache
 from functools import wraps
 from datetime import datetime
 import logging

@@ -95,21 +95,19 @@ class Topology():
 				if parent not in self.network_graph.keys():
 					self.network_graph[parent] = []
 				self.network_graph[parent].append(ensemble_id)
-		pdb.set_trace()
-		if 'conn_en_en' not in config.keys():		
+		if 'conn_en_en' not in config.keys():
 			for parent,children in self.network_graph.items():
 				if parent != 'root':
 					for ensemble_id in children:
 						conf = self.config[ensemble_id]
 						self.connectEnsembles(parent,-1,ensemble_id,0,conf)
-	
 		else:
 			for conn_specs in config['conn_en_en']:
 				_from = self.ensemble_map[conn_specs[0][0]]
 				_from_layer = conn_specs[0][1]
 				_to = self.ensemble_map[conn_specs[1][0]]
 				_to_layer = conn_specs[1][1]
-				self.connectLayers(_from,_from_layer,_to,_to_layer,self.config[conn_specs[1][0]])
+				#self.connectLayers(_from,_from_layer,_to,_to_layer,self.config[conn_specs[1][0]])
 
 	def connectEnsembles(self,source_m,dest_m,dest_ensemble_config):
 		#layer1 = self.ensemble_map[source_m][-1]
