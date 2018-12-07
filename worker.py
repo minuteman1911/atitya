@@ -27,14 +27,14 @@ import os,sys
 import argparse
 
 class BatchConsumer(Process):
-	def __init__(self,name,network_id,db_url,conn):
+	def __init__(self,name,network_id,db_url,conn,node_class):
 		super().__init__()
 		self.name = name
 		self.db_url = db_url
 		self.network_id = network_id
 		self.init = False
 		self.is_running = True
-		self.node_map = ConnectionHandler(conn,channel='_nodes',init=Node)
+		self.node_map = ConnectionHandler(conn,channel='_nodes',init=node_class)
 		self.edge_map = ConnectionHandler(conn,channel='_edges',init=Params)
 	
 	def Init(self):
@@ -150,10 +150,10 @@ def main(argv):
 		fp.write(blob)
 
 	try:	
-		from shared.node import Node as newNode
+		from kobe.shared.node import Node as newNode
 	except ImportError as e:
 		logger.info('Exception in loading node file : %s' , e)
-		
+		sys.exit(-1)
 
 	Node.process = newNode.process
 
@@ -164,7 +164,7 @@ def main(argv):
 	parent_conns = []
 	for i in range(num_consumers):
 		parent_conn,child_conn = Pipe()
-		c = BatchConsumer('Consumer-'+str(i),network_id,db_url,child_conn)
+		c = BatchConsumer('Consumer-'+str(i),network_id,db_url,child_conn,newNode)
 		parent_conns.append(parent_conn)
 		consumers.append(c)
 		c.start()

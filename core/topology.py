@@ -17,6 +17,7 @@ import pdb
 class Topology():
 	def __init__(self,configpath,db_url='redis://localhost:6379'):
 		self.logger = logging.getLogger(__name__)
+		self.configpath = configpath
 		assert os.path.exists(configpath), "Config file "+ configpath +" does not exist"
 		yaml=YAML(typ='unsafe')
 		yaml.default_flow_style = True
@@ -35,7 +36,7 @@ class Topology():
 		except Exception as e:
 			self.logger.error('Unable to connect to redis, %s',e)
 		self.db_url = db_url
-		addr = hashlib.md5(pickle.dumps(config)).hexdigest()
+		addr = hashlib.md5(open(configpath,'rb').read()).hexdigest()
 		if self.db_conn.exists(self.network_name):
 			if self.db_conn.hmget(self.network_name,'addr')[0].decode('UTF-8') != addr:
 				ip = None
@@ -60,7 +61,7 @@ class Topology():
 	
 	def commitToDB(self):
 		ret = None
-		addr = hashlib.md5(pickle.dumps(self.config)).hexdigest()
+		addr = hashlib.md5(open(self.configpath,'rb').read()).hexdigest()
 		list = []
 		for s,val in self.synapse_map.items():
 			tuple =  (val['source'],val['destination'])
@@ -95,27 +96,39 @@ class Topology():
 				if parent not in self.network_graph.keys():
 					self.network_graph[parent] = []
 				self.network_graph[parent].append(ensemble_id)
-		if 'conn_en_en' not in config.keys():
-			for parent,children in self.network_graph.items():
-				if parent != 'root':
-					for ensemble_id in children:
-						conf = self.config[ensemble_id]
-						self.connectEnsembles(parent,-1,ensemble_id,0,conf)
-		else:
-			for conn_specs in config['conn_en_en']:
-				_from = self.ensemble_map[conn_specs[0][0]]
-				_from_layer = conn_specs[0][1]
-				_to = self.ensemble_map[conn_specs[1][0]]
-				_to_layer = conn_specs[1][1]
-				#self.connectLayers(_from,_from_layer,_to,_to_layer,self.config[conn_specs[1][0]])
+		
+		for conn_specs in config['conn_en_en']:
+			self.connectLayers( conn_specs )
 
 	def connectEnsembles(self,source_m,dest_m,dest_ensemble_config):
 		#layer1 = self.ensemble_map[source_m][-1]
 		layer2 = self.ensemble_map[dest_m][0]
 		self.connectLayers(self.ensemble_map[source_m],layer2,dest_ensemble_config)
 	
+	def connectLayers(self, conn_specs):
+		#pdb.set_trace(  )
+			_from = self.ensemble_map[conn_specs[0][0]]
+			_from_layer = conn_specs[0][1]
+			_to = self.ensemble_map[conn_specs[1][0]]
+			_to_layer = conn_specs[1][1]
+			receptive_field = conn_specs[2][0]
+			synapse_params = conn_specs[2][1]
+			#slice=self.getSlice(_to,self.config[conn_specs[1][0]][0][0] )
+			#s_slice = len(slice)
+			for irow in range(len(_to[_to_layer])):
+				#s_slice_row = len(slice[irow%s_slice])
+				for inode in range(len(_to[_to_layer][irow])):
+					n = _to[_to_layer][irow][inode]
+					if _from_layer >= 0 and _from_layer <= len(_from[_from_layer]):
+						mx,my = len(_to[_to_layer][0]),len(_to[_to_layer])
+						nx,ny = len(_from[_from_layer][0]),len(_from[_from_layer])
+						pos_matrix = self.getCoordinates(my,ny,mx,nx)
+						srow,scol=self.getReceptiveField(receptive_field,nx,ny) # receptive field constant currently hard coded as 1 
+						input_space_nodes = self.getConnList(pos_matrix[irow][inode],float(scol)/2,float(srow)/2,_from[_from_layer])
+						self.connectInputNodes(input_space_nodes,n,synapse_params)
 	
-	def connectLayers(self,prev_ensemble,layer2,dest_ensemble_config):
+	
+	def connectLayers2(self,prev_ensemble,layer2,dest_ensemble_config):
 		#pdb.set_trace()
 		slice=self.getSlice(0,dest_ensemble_config)
 		s_slice = len(slice)
@@ -137,8 +150,7 @@ class Topology():
 						#	for s,val in self.synapse_map.items():
 						#		if val['source'] == id and val['destination'] == n:
 						#			pdb.set_trace()
-						self.connectInputNodes(input_space_nodes,n,synapse_params)		
-		
+						self.connectInputNodes(input_space_nodes,n,synapse_params)
 	
 	def addNewNode(self,ensemble_id,neuron_params):
 		idx = getNewId(list(self.network_map.keys()),4,prefix=ensemble_id+'_')
@@ -186,12 +198,14 @@ class Topology():
 		
 		assert 'conn_en_en' in config.keys() , "Key required : conn_en_en"
 		for i in config['conn_en_en']:
-			assert len(i) == 2 and len(i[0]) == 2 and len(i[1]) == 2, "Require only two elements in the outer array, and two in the inner one,\n in the form [[<source_ensemble>,<source_layer>],[<dest_ensemble>,<dest_layer>]]"			
+			assert len(i) == 3 and len(i[0]) == 2 and len(i[1]) == 2 and len(i[2]) == 2, "Require three elements in the outer array, and two in the inner one,\n in the form [[<str source_ensemble>,<int source_layer>],[<str dest_ensemble>,<int dest_layer>],[<float receptive_field,dict synapse_params>]]"
 			assert i[0][0] in config.keys(), "No ensemble of name " + i[0][0] + " exists in the config"
 			assert i[1][0] in config.keys(), "No ensemble of name " + i[1][0] + " exists in the config"
-			assert i[0][1] <= len(config[i[0][0]]), "Layer " + str(i[0][1]) + " does not exist in ensemble " + i[0][0]  
-			assert i[1][1] <= len(config[i[1][0]]), "Layer " + str(i[1][1]) + " does not exist in ensemble " + i[1][0]		
-		retcode = True			
+			assert isinstance(i[0][1],int) and i[0][1] <= len(config[i[0][0]]), "Layer " + str(i[0][1]) + " does not exist in ensemble " + i[0][0]  
+			assert isinstance(i[1][1],int) and i[1][1] <= len(config[i[1][0]]), "Layer " + str(i[1][1]) + " does not exist in ensemble " + i[1][0]
+			assert isinstance(i[2][0],float) and i[2][0] <= 1 , "Receptive field for synapse must be a float between 0 and 1" 
+			assert isinstance(i[2][1],dict) , "Synapse parameters must be of type dict"
+		retcode = True
 		return retcode
 	
 	
@@ -219,7 +233,7 @@ class Topology():
 						if synapse_params:
 							for element in synapse_params:
 								if element:
-									assert len(element) == 3 and all([isinstance(element[0],int),isinstance(element[1],float),isinstance(element[2],dict)]) , "Each element in synapse_config must be of the form <layer_to_connect,receptive_field,synapse_parameters>" 
+									assert len(element) == 3 and all([isinstance(element[0],int),isinstance(element[1],float),isinstance(element[2],dict)]) , "Each element in synapse_config must be of the form <int layer_to_connect,float receptive_field,dict synapse_parameters>" 
 									#assert element[0] + len(group) >= 0 , "Cannot refer to layer " + str(element[0]) + " in a group of length " + str(len(group))
 		retcode = True
 		return retcode
