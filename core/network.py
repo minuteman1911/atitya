@@ -244,9 +244,9 @@ class Network(object):
 		
 		result1 = pipe.execute()
 		if params != None:
-			result = [ [item_getter(json.loads(i),*params) for i in oplist ] for oplist in result1 ]
+			result = [ [item_getter(json.loads(i.decode('utf-8')),*params) for i in oplist ] for oplist in result1 ]
 		else:
-			result = [ [ json.loads(i) for i in oplist ] for oplist in result1 ]
+			result = [ [ json.loads(i.decode('utf-8')) for i in oplist ] for oplist in result1 ]
 		return result
 
 	def setEnsembleParam(self,ename,paramname,value):

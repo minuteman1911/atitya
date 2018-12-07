@@ -136,7 +136,7 @@ class RedisDatastore():
 	@lru_cache(GLOBAL_CACHE_SIZE)
 	def get(self,hname,key):
 		val = self.conn.hget(hname,key)
-		return json.loads(val)
+		return json.loads(val.decode('utf-8'))
 			
 	def set(self,hname,key,val):
 		self.conn.hset(hname,key,json.dumps(val))

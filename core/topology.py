@@ -69,13 +69,13 @@ class Topology():
 			else:
 				logger.info("Fatal Error. Contact support if you wanna solve this")
 		pipe = self.db_conn.pipeline()
-		mapping = { idx : obj.dumpToJSON() for idx,obj in self.network_map.items()}
+		mapping = { idx : obj.dumpToJSON().encode('utf-8') for idx,obj in self.network_map.items()}
 		pipe.hmset(addr + '_' + 'nodes' ,mapping)
-		mapping = { idx : json.dumps(obj) for idx,obj in self.synapse_map.items()}
+		mapping = { idx : json.dumps(obj).encode('utf-8') for idx,obj in self.synapse_map.items()}
 		pipe.hmset(addr + '_' + 'edges' ,mapping)
-		mapping = { idx : json.dumps(obj) for idx,obj in self.ensemble_map.items()}
+		mapping = { idx : json.dumps(obj).encode('utf-8') for idx,obj in self.ensemble_map.items()}
 		pipe.hmset(addr + '_' + 'ensembles',mapping)
-		mapping = { idx : json.dumps(obj) for idx,obj in self.ensemble_params.items()}
+		mapping = { idx : json.dumps(obj).encode('utf-8') for idx,obj in self.ensemble_params.items()}
 		pipe.hmset(addr + '_' + 'ensemble_params',mapping)
 		self.logger.info("Storing the generated network in database")		
 		pipe.execute()
