@@ -37,8 +37,7 @@
  This section might be a little biased towards my own views about computation and simulation. There is a tradeoff between the level of detail to which we can simulate a particular thing, and the computing power required for doing it. More the detail we try to simulate, more is the computing power required.  
  One goal of Kobe is to find the minimum level of detail required to generate a plausible simulation. 
  ![computation power](./images/img1.svg)
- Above is an illustration of the approximate computing power required to simulate the whole brain ( around 500 petaflops for 100 billion neurons ). 
- There are multiple factors at play at once on multiple levels in the brain. Below is a table, detailing the phenomena simulated in Kobe.
+ Above is an illustration of the approximate computing power required to simulate the whole brain ( around 500 petaflops for 100 billion neurons ). It indicates that we are going to run out of computing power if we try to simulate every minute detail that there is. Instead, we can compensate some of the less important things for some important details which actually play a significant role in computation. Maybe we could let go of the position in space where the neurons are present, the location of an individual spine on the dendrite, the intraneuronal messaging system etc. Below is a table, detailing the phenomena simulated in Kobe.
   #### Morphology 
   Name                           | Present in Kobe 
   ------------------------------ | -----------------
@@ -78,10 +77,8 @@
   node pruning                   | Yes
   connection pruning             | Yes
   formation of new connections ( opposite of pruning )  | Possible
-   
-  All these phenomena can be simulated along with the presence of others. Eg : stdp and reward based learning can both be present on a particular synapse.
   
-  A simulation in Kobe is based primarily on a computational or functional aspect, rather than the biophysical aspect. Meaning, Kobe does not try to model an ideal neuron and an ideal biophysically plausible network of neurons. Infact, doing do may be counterproductive, inefficient and a waste of computing power. This is a very dangerous assumption that the whole idea of Kobe rests on; if at any point in time, it is proved that an ideal simulation is necessary for generating a complete simulation of emergent behaviour, Kobe would be obsolete. Proving one would require disproving the other, another purpose for Kobe to exist. Ironically, Kobe could lead to its own peril.
+  A simulation in Kobe is based primarily on a computational or functional aspect, rather than the biophysical aspect. Meaning, Kobe does not try to model an ideal neuron and an ideal biophysically plausible network of neurons. Infact, doing do may be counterproductive, inefficient and a waste of computing power. This is a very dangerous assumption that the whole idea of Kobe rests on; if at any point in time, it is proved that an ideal simulation is necessary for generating a complete simulation of emergent behaviour, Kobe would be obsolete. Proving one would require disproving the other, another purpose for Kobe to exist.
         
 
 # Software Architecture
@@ -120,8 +117,6 @@ Approach #1 seems plausible and is in the roadmap of development. Approach #2 se
  ### Current implementation in Kobe
   In Kobe, a small group of Nodes are processed in batches. These batches are put on the global queue sequentially, but they are picked up by the workers randomly. Thus, it can very well be considered as random.
  
- 
-
 # Model of the brain
 In the following sub-sections, we shall dive into the structural and functional aspects of the brain 
 
@@ -188,8 +183,8 @@ In the following sub-sections, we shall dive into the structural and functional 
 # Issues
   There are some known issues in Kobe which affect the effeciency. Following is the whole list
    1. Redis operations are not threaded. Need to either use threadis, or some other alternative, where reads are parallel, but writes are sequential.
-   2. The whole worker program can be made in a closer to hardware language like C or C++, but this would require converting or exporting the Node.py code into the same language.
-   3. Prevent immediate and individiual writes to database, make them buffered.
+   2. Prevent immediate and individiual writes to database, make them buffered.
+   3. The worker program is in Python, need to export it to C++.
 
 [Page 2 : Example code walkthrough](code_walkthrough.md)
 
