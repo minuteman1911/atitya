@@ -4,7 +4,6 @@
 
 # What is Kobe
   Kobe is an open source simulation tool written in Python which can model artificial spiking neural networks, along with its environment ( using OpenAI Gym ), with more focus on the computational or funcional aspect rather than the biophysical one.
-    **It is still largely meant for research and has no practical purpose as of now.**
     
 # TL;DR 
    I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image processing, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
@@ -15,7 +14,7 @@
    ### Difference between ANNs and biological NNs
   Perhaps the most important difference in ANNs and bioloical neural networks is that of time. ANNs pass information to each other based on the intensity of their output. On the contrary, biological neurons seem to communicate based on modulation of their firing rate. Not only timing, but also the inter-connectivity is different in biological neural networks. They are characterized by large recurrent feedback loops, and seem to be organized into distinct layers. I simply cannot mention and explain all the differences here, the list is extensive.      
    ### Is it even possible ?
-   The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to replicate a task which can be performed easily by an ANN using a completely different network topology and different learning and training algorithms which closely resemble the biological brain.
+   The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to replicate a task which can be performed easily by an ANN using a completely different network topology and different learning and training algorithms which closely resemble the dynamics of the biological brain.
  
 # Other similar projects
  There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have described the major ones in short.
@@ -116,7 +115,7 @@
   1. Asynchronously - Maintain a predetermined order ( could be based on propagation delays, such that the one with the least delay is evaluated first ) or evaluate all nodes at random.
   2. Synchronously - Hold all the outputs of the nodes in that layer, and update them only when the whole layer is processed.
   
-  It is not known which approach would work and which wouldn't, both should be tried and tested. Currently, neither is implemented in Kobe in its entirety. Approach #1 seems plausible and is in the roadmap of development. Approach #2 seems not only impractical but also difficult to implement.
+Approach #1 seems plausible and is in the roadmap of development. Approach #2 seems difficult to implement. Currently, neither is implemented in Kobe in its entirety.
  
  ### Current implementation in Kobe
   In Kobe, a small group of Nodes are processed in batches. These batches are put on the global queue sequentially, but they are picked up by the workers randomly. Thus, it can very well be considered as random.
@@ -145,7 +144,7 @@ In the following sub-sections, we shall dive into the structural and functional 
    There exist numerous models of a neuron in literature, which define its behaviour. Out of these, the one which is modelled in Kobe by default is integrate and fire with exponential decay. This is simple to implement, and also computationally efficient. **While there is no restriction on writing differential equations and executing them in the Kobe runtime, it is discouraged.** It is better to first convert any differential equations into an equivalent heuristic, this is what is done in the default example.
 
  ## Plasticity 
-   This is the most elusive part of the whole story and at the end of this section you are going to think that it is impossible to ever simulate the brain. There are **contradictory** findings on how plasticity works. A consensus needs to be reached on this matter, and it must not be unilateral. Plasticity is thought to be dependent on the balance which is reached by the push and pull effects of various phenomena at play in vivo. There is competition in the brain at every level, micro (spanning few neurons) and macro (spanning multiple neurons, or even a whole cortical area). Also, the rules of plasticity seem to be different between different regions (cortex vs. hippocampus). Plasticity can be synaptic as well as non-synaptic, homo- as well as hetero- synaptic. Hetero-synaptic plasticity and neuromodulation are both macro level effects which can be modelled in Kobe. Infact, it is unclear what is the distinction between them.  
+   This is the most elusive part of the whole story and at the end of this section you are going to think that it is impossible to ever simulate the brain. There are **contradictory** findings on how plasticity works. Plasticity is thought to be dependent on the balance which is reached by the push and pull effects of various phenomena at play in vivo. There is competition in the brain at every level, micro (spanning few neurons) and macro (spanning multiple neurons, or even a whole cortical area). Also, the rules of plasticity seem to be different between different regions (cortex vs. hippocampus). Plasticity can be synaptic as well as non-synaptic, homo- as well as hetero- synaptic. Hetero-synaptic plasticity and neuromodulation are both macro level effects which can be modelled in Kobe. Infact, it is unclear what is the distinction between them.  
   
   ### Spike-time dependent plasticity
    Donald Hebb in 1949 formulated what is known today as Hebbian rule of learning. This rule is famously known by the phrase "Neurons that fire together, wire together". Later experiments revealed that a temporal component is a necessary factor which determines whether the neurons' association with other neurons increases or decreases. If a neuron fires before another one fires, then actually their association decreases i.e. the weight between them decreases This can be modelled as the stdp rule or a window rule (which is computationally more efficient)
@@ -189,9 +188,8 @@ In the following sub-sections, we shall dive into the structural and functional 
 # Issues
   There are some known issues in Kobe which affect the effeciency. Following is the whole list
    1. Redis operations are not threaded. Need to either use threadis, or some other alternative, where reads are parallel, but writes are sequential.
-   2. There is a dirty LRU cache hack in which the functools library is modified to achieve the desired result. But this modification is in python. Thus the C implementation of functools (which is a lot faster) cannot be used.
-   3. The whole worker program can be made in a closer to hardware language like C or C++, but this would require converting or exporting the Node.py code into the same language.
-   4. Prevent immediate and individiual writes to database, make them buffered.
+   2. The whole worker program can be made in a closer to hardware language like C or C++, but this would require converting or exporting the Node.py code into the same language.
+   3. Prevent immediate and individiual writes to database, make them buffered.
 
 [Page 2 : Example code walkthrough](code_walkthrough.md)
 
