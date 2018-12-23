@@ -186,7 +186,7 @@ In the following sub-sections, we shall dive into the structural and functional 
    2. Prevent immediate and individiual writes to database, make them buffered.
    3. The worker program is in Python, need to export it to C++.
 
-[Page 2 : Example code walkthrough](code_walkthrough.md)
+<!-- [Page 2 : Example code walkthrough](code_walkthrough.md) -->
 
 # References
 
