@@ -11,9 +11,9 @@
    Most implementations of AI today employ Machine Learning algorithms to make their applications smarter. Although AI has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing power increased manifold in the last two decades. AI is actually a broader term which means a smart system designed deliberately to carry out tasks deemed as intelligent. Thus, a very complex system of hardcoded rules, interdependent on each other could make up an ostensibly good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest advancement of ANNs employed in an AI system) and the biological brain. 
     Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI implementations does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot; that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the learning rules in the artificial neural network are different from those that of the biological counterpart.
     Can today's AI make a machine possible of exhibiting conscious thought? Unlikely.
-   ## Difference between ANNs and biological NNs
+## Difference between ANNs and biological NNs
   Perhaps the most important difference in ANNs and bioloical neural networks is that of time. ANNs pass information to each other based on the intensity of their output. On the contrary, biological neurons seem to communicate based on modulation of their firing rate. Not only timing, but also the inter-connectivity is different in biological neural networks. They are characterized by large recurrent feedback loops, and seem to be organized into distinct layers. I simply cannot mention and explain all the differences here, the list is extensive.      
-   ## Is it even possible ?
+## Is it even possible ?
    The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to help AI researchers, neuroscientists and enthusiasts in creating, testing and implementing novel algorithms, morphologies and methods which are closer to the biological brain while forcusing on the computational rather than the biological aspect of the simulation.  
 # Other similar projects
  There are many excellent simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have described the major ones in short.
@@ -26,7 +26,7 @@
  
  NEURON is similar to GENESIS and comes with a GUI builder for creating networks easily. Also useful for modelling an individual neuron.
  
- ## Some key differences between these projects and Kobe are:
+## Some key differences between these projects and Kobe are:
  1. The process of creating a network is made very easy in Kobe. You need to only create a single file for defining the whole network.
  2. Kobe tries to create a non-ideal model of the brain as opposed to a completely ideal biophysical model. In Kobe, we consider a node as a point neuron and modelling of intraneuronal dynamics, though possible, is discouraged. This is explained in more detail in the next section.
  3. A Network in Kobe is actually an OpenAI Gym Agent, which is present in an Environment. This way, we try to complete the circuit which is essential for any host present in a system to learn and grow. Maybe life on earth formed only because of the periodicity of the revolution of the earth around the Sun, and its revolution about itself. Circadian rythms and sleep cycles would never form if the earth were stationary about its orbit. Basically, the Environment in which an agent is present is crucial for its development. Thus we model the Environment in addition to the Agent.
