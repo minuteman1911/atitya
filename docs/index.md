@@ -8,16 +8,15 @@
 # TL;DR 
    I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image processing, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
 
-   Most people today implement a technique called ML (Machine Learning) to make their applications smarter. Although ML has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing power increased manifold in the last two decades. AI is actually a broader term which may be vaguely summed up as a solution to the problem : "Do anything but make my machine seem intelligent!". Thus, a very complex system of hardcoded rules, interdependent on each other could make up a good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest advancement of ANNs employed in an AI system) and the biological brain. 
-    Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI robots does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot; that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the learning rules in the artificial neural network are different from those that of the biological counterpart.
+   Most implementations of AI today employ Machine Learning algorithms to make their applications smarter. Although AI has been known to and used by researchers since many decades, it's proliferation into the consumer space occured only after the average computing power increased manifold in the last two decades. AI is actually a broader term which means a smart system designed deliberately to carry out tasks deemed as intelligent. Thus, a very complex system of hardcoded rules, interdependent on each other could make up an ostensibly good AI. But, it cannot ( as of now ) necessarily transform a machine into a sentient being. The brain (of any species) itself is a complex system of hardcoded rules, but there are subtle differences in a deep neural network (which is the latest advancement of ANNs employed in an AI system) and the biological brain. 
+    Can today's AI make a machine seem as intelligent as a human? Yes. The emergent behaviour of the latest AI implementations does seem to **roughly** imitate the emergent behaviour found in humans, including speech and voice, but the rules are hardcoded nonetheless. I do not mean by this, that each response is hardcoded in the robot; that would be insane. What I mean is, there is hardcode in the mapping of outputs to ideas which that output represents. Also, the learning rules in the artificial neural network are different from those that of the biological counterpart.
     Can today's AI make a machine possible of exhibiting conscious thought? Unlikely.
    ## Difference between ANNs and biological NNs
   Perhaps the most important difference in ANNs and bioloical neural networks is that of time. ANNs pass information to each other based on the intensity of their output. On the contrary, biological neurons seem to communicate based on modulation of their firing rate. Not only timing, but also the inter-connectivity is different in biological neural networks. They are characterized by large recurrent feedback loops, and seem to be organized into distinct layers. I simply cannot mention and explain all the differences here, the list is extensive.      
    ## Is it even possible ?
-   The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to replicate a task which can be performed easily by an ANN using a completely different network topology and different learning and training algorithms which closely resemble the dynamics of the biological brain.
- 
+   The goal of Kobe is not full brain simulation, such a thing is premature, inconceivable and might not even be possible at all. The goal is to help AI researchers, neuroscientists and enthusiasts in creating, testing and implementing novel algorithms, morphologies and methods which are closer to the biological brain while forcusing on the computational rather than the biological aspect of the simulation.  
 # Other similar projects
- There are many simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have described the major ones in short.
+ There are many excellent simulation tools out there like BRIAN, Neuron, Genesis etc. In this section, I have described the major ones in short.
  
  NEST is a very powerful simulator with the capability to create large scale biologically realistic networks of neurons.
  
@@ -39,7 +38,7 @@
  ![computation power](./images/img1.svg)
  Above is an illustration of the approximate computing power required to simulate the whole brain ( around 500 petaflops for 100 billion neurons ). It indicates that we are going to run out of computing power if we try to simulate every minute detail that there is. Instead, we can compensate some of the less important things for some important details which actually play a significant role in computation. Maybe we could let go of the position in space where the neurons are present, the location of an individual spine on the dendrite, the intraneuronal messaging system etc. Below is a table, detailing the phenomena simulated in Kobe.
   
-   ## Morphology 
+   Morphology 
    |Name                                   | Present in Kobe  |
    |-------------------------------------- | -----------------|
    |multiple neuron types                  | Yes              |
@@ -51,7 +50,7 @@
    |simulation of individual synapse to micro level | No  |
    |intraneuronal communication            | No              |
  
-   ## Evaluation
+   Evaluation
    |Name                           | Present in Kobe |
    |------------------------------ | ----------------|
    |spatio-temporal leaky integrate and fire       | Yes  |
@@ -62,7 +61,7 @@
    |activation dependent on spine location on denrite | No  |
    |simulation of glial cells | No  |
   
-   ## Plasticity
+   Plasticity
    |Name                           | Present in Kobe | 
    |------------------------------ | ---------------- |
    |spike-time dependent plasticity| Yes  |
@@ -72,7 +71,7 @@
    |heterosynaptic plasticity      | Possible  |
      
    
-   ## Pruning and generation 
+   Pruning and generation 
    |Name                           | Present in Kobe  | 
    |------------------------------ | ----------------|
    |node pruning                   | Yes  |
