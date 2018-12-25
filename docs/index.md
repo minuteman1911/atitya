@@ -38,7 +38,8 @@
  One goal of Kobe is to find the minimum level of detail required to generate a plausible simulation. 
  ![computation power](./images/img1.svg)
  Above is an illustration of the approximate computing power required to simulate the whole brain ( around 500 petaflops for 100 billion neurons ). It indicates that we are going to run out of computing power if we try to simulate every minute detail that there is. Instead, we can compensate some of the less important things for some important details which actually play a significant role in computation. Maybe we could let go of the position in space where the neurons are present, the location of an individual spine on the dendrite, the intraneuronal messaging system etc. Below is a table, detailing the phenomena simulated in Kobe.
-  #### Morphology 
+  
+  |#### Morphology 
   |Name                           | Present in Kobe  |
   |------------------------------ | -----------------
   |multiple neuron types          | Yes  |
@@ -50,7 +51,7 @@
   |simulation of individual synapse to micro level | No  |
   |intraneuronal communication | No  |
  
-  #### Evaluation
+  |#### Evaluation
   |Name                           | Present in Kobe |
   |------------------------------ | ----------------|
   |spatio-temporal leaky integrate and fire       | Yes  |
@@ -61,7 +62,7 @@
   |activation dependent on spine location on denrite | No  |
   |simulation of glial cells | No  |
   
-  #### Plasticity
+  |#### Plasticity
   |Name                           | Present in Kobe | 
   |------------------------------ | ---------------- |
   |spike-time dependent plasticity| Yes  |
@@ -71,7 +72,7 @@
   |heterosynaptic plasticity      | Possible  |
      
    
-  #### Pruning and generation 
+  |#### Pruning and generation 
   |Name                           | Present in Kobe  | 
   |------------------------------ | ----------------|
   |node pruning                   | Yes  |
