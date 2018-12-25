@@ -61,7 +61,7 @@
   |activation dependent on spine location on denrite | No  |
   |simulation of glial cells | No  |
   
-  |#### Plasticity
+  #### Plasticity
   |Name                           | Present in Kobe | 
   |------------------------------ | ---------------- |
   |spike-time dependent plasticity| Yes  |
