@@ -39,45 +39,45 @@
  ![computation power](./images/img1.svg)
  Above is an illustration of the approximate computing power required to simulate the whole brain ( around 500 petaflops for 100 billion neurons ). It indicates that we are going to run out of computing power if we try to simulate every minute detail that there is. Instead, we can compensate some of the less important things for some important details which actually play a significant role in computation. Maybe we could let go of the position in space where the neurons are present, the location of an individual spine on the dendrite, the intraneuronal messaging system etc. Below is a table, detailing the phenomena simulated in Kobe.
   
-  |#### Morphology 
-  |Name                           | Present in Kobe  |
-  |------------------------------ | -----------------
-  |multiple neuron types          | Yes  |
-  |layer wise seperation of neuron groups | Yes  |
-  |locally connected neurons | Yes  |
-  |large number of inter-layer and intra-layer connections | Yes  |
-  |columnar organization          | Yes  |     
-  |multi-compartment neurons      | No  |
-  |simulation of individual synapse to micro level | No  |
-  |intraneuronal communication | No  |
+  #### Morphology 
+   |Name                                   | Present in Kobe  |
+   |-------------------------------------- | -----------------|
+   |multiple neuron types                  | Yes              |
+   |layer wise seperation of neuron groups | Yes      |
+   |locally connected neurons              | Yes   |
+   |large number of inter-layer and intra-layer connections | Yes  |
+   |columnar organization                  | Yes  |     
+   |multi-compartment neurons              | No  |
+   |simulation of individual synapse to micro level | No  |
+   |intraneuronal communication            | No              |
  
-  |#### Evaluation
-  |Name                           | Present in Kobe |
-  |------------------------------ | ----------------|
-  |spatio-temporal leaky integrate and fire       | Yes  |
-  |homeostatic regulation   | Yes  |
-  |consideration of propagation delays | Possible  |
-  |multiple neurotransmitters     | Possible  |
-  |stochastically firing neurons  | Possible  |
-  |activation dependent on spine location on denrite | No  |
-  |simulation of glial cells | No  |
+  #### Evaluation
+   |Name                           | Present in Kobe |
+   |------------------------------ | ----------------|
+   |spatio-temporal leaky integrate and fire       | Yes  |
+   |homeostatic regulation   | Yes  |
+   |consideration of propagation delays | Possible  |
+   |multiple neurotransmitters     | Possible  |
+   |stochastically firing neurons  | Possible  |
+   |activation dependent on spine location on denrite | No  |
+   |simulation of glial cells | No  |
   
-  |#### Plasticity
-  |Name                           | Present in Kobe | 
-  |------------------------------ | ---------------- |
-  |spike-time dependent plasticity| Yes  |
-  |reward based learning / neuromodulation | Yes  |
-  |short term depression          | Yes  |
-  |short term facilitation        | Yes  |
-  |heterosynaptic plasticity      | Possible  |
+  #### Plasticity
+   |Name                           | Present in Kobe | 
+   |------------------------------ | ---------------- |
+   |spike-time dependent plasticity| Yes  |
+   |reward based learning / neuromodulation | Yes  |
+   |short term depression          | Yes  |
+   |short term facilitation        | Yes  |
+   |heterosynaptic plasticity      | Possible  |
      
    
-  |#### Pruning and generation 
-  |Name                           | Present in Kobe  | 
-  |------------------------------ | ----------------|
-  |node pruning                   | Yes  |
-  |connection pruning             | Yes  |
-  |formation of new connections ( opposite of pruning )  | Possible  |
+  #### Pruning and generation 
+   |Name                           | Present in Kobe  | 
+   |------------------------------ | ----------------|
+   |node pruning                   | Yes  |
+   |connection pruning             | Yes  |
+   |formation of new connections ( opposite of pruning )  | Possible  |
   
   A simulation in Kobe is based primarily on a computational or functional aspect, rather than the biophysical aspect. Meaning, Kobe does not try to model an ideal neuron and an ideal biophysically plausible network of neurons. Infact, doing do may be counterproductive, inefficient and a waste of computing power. This is a very dangerous assumption that the whole idea of Kobe rests on; if at any point in time, it is proved that an ideal simulation is necessary for generating a complete simulation of emergent behaviour, Kobe would be obsolete. Proving one would require disproving the other, another purpose for Kobe to exist.
         
