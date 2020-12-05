@@ -4,7 +4,6 @@ from gym import Env, logger
 from gym.spaces import Discrete, Tuple ,Dict , Box
 from gym.utils import colorize, seeding
 import numpy as np
-from six import StringIO
 import sys
 import math
 from random import choice 
