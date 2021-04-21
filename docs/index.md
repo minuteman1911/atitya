@@ -1,11 +1,9 @@
 # Kobe
+  Kobe is an open source simulation tool written in Python which can model artificial spiking neural networks, along with its environment ( using OpenAI Gym ), with more focus on the computational or funcional aspect rather than the biophysical one.
 # Installation
 
   Please follow the steps given in the README.md file to install Kobe
-
-# What is Kobe
-  Kobe is an open source simulation tool written in Python which can model artificial spiking neural networks, along with its environment ( using OpenAI Gym ), with more focus on the computational or funcional aspect rather than the biophysical one.
-    
+  
 # TL;DR 
    I shall begin this section by saying that its optional. Though you don't have to read all of this stuff to start using Kobe, it provides some background as to the problem that Kobe is trying to solve. I am assuming that you, as a reader haven't stumbled upon this page by mere accident and that you are familiar with artificial neural networks ( ANNs ). ANNs have proven their worth in a wide range of areas like image processing, natural language processing, classification, prediction etc. The problem though with ANNs of today is that they can solve only a specefic task and do not exhibit a 'General Intelligence'. There are fundamental differences between how a biological neural network works and how an artificial one works. Kobe tries to bridge this gap.  
 
