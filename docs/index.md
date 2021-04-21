@@ -120,7 +120,7 @@ Approach #1 seems plausible and is in the roadmap of development. Approach #2 se
 In the following sub-sections, we shall dive into the structural and functional aspects of the brain 
 
 ## Morphology
- A huge difference between an ANN and a biological one is morphological. The neocortex is cytoarchitectonically composed of multiple layers stacked on top of each other. The ANNs are based on our understanding of how the brain might arrange representations into a hierarchy. But what we observe in a real brain is a combination of sideways hierarchy as well as a vertical hierarchy. Every primary sensory area in the neocortex is connected to a higher functional area which is adjoining the primary area (sideways hierarchy) and every area itself has numerous inter-layer feedforward and feedback connections (vertical hierarchy). Although a lot of research is now being conducted in this direction, inter-areal cortico-cortical connectivity is still kind of a gray area in neuroscience (pun intended).
+ A huge difference between an ANN and a biological one is morphological. The neocortex is composed of multiple layers stacked on top of each other. The ANNs are based on our understanding of how the brain might arrange representations into a hierarchy. But what we observe in a real brain is a combination of sideways hierarchy as well as a vertical hierarchy. Every primary sensory area in the neocortex is connected to a higher functional area which is adjoining the primary area (sideways hierarchy) and every area itself has numerous inter-layer feedforward and feedback connections (vertical hierarchy). Although a lot of research is now being conducted in this direction, inter-areal cortico-cortical connectivity is still kind of a gray area in neuroscience (pun intended).
  
 ### Canonical microcircuit of the neocortex
    The neocortex is roughly a 2-4 mm thick region made up mostly of neuronal cell bodies. It was discovered in the mid 20th Century that the neocortex is organized into distinct layers. Each layer of the neocortex is stacked on top of the other, forming a column of sorts. This columnar organization is repeated throughout the cortex, with some differences in the connectivity between different areas. Eg : Layer 4 of the cortex is thick in areas where it receives inputs from subcortical regions i.e. the thalamus. In other regions, Layer 4 receives cortico-cortical feedforward connections and is thinner. Though this is an area of ongoing research, enough information is now available than ever was, which should be taken advantage of. 
@@ -186,8 +186,3 @@ In the following sub-sections, we shall dive into the structural and functional 
    3. The worker program is in Python, need to export it to C++.
 
 <!-- [Page 2 : Example code walkthrough](code_walkthrough.md) -->
-
-# References
-
-
-
